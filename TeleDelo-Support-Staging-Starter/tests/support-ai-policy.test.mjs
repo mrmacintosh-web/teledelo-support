@@ -3,10 +3,13 @@ import assert from 'node:assert/strict';
 import {supportAIEnabled,validateAISupportQuestion,buildSupportAIMessages} from '../src/support-ai-policy.mjs';
 
 test('AI stays off unless subscriber auth, explicit enable flag, and binding exist',()=>{
- const AI={run:async()=>({response:'test'})};
- assert.equal(supportAIEnabled({SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'subscriber',AI}),true);
- assert.equal(supportAIEnabled({SUPPORT_AI_ENABLED:'false',SUPPORT_AUTH_MODE:'subscriber',AI}),false);
- assert.equal(supportAIEnabled({SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',AI}),false);
+ const AI={run:async()=>({response:'test'})},DB={prepare(){}};
+ const shared={AI,DB,RATE_LIMIT_SALT:'demo-salt'};
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'subscriber'}),true);
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'false',SUPPORT_AUTH_MODE:'subscriber'}),false);
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'staging',STAFF_EMAILS:'staff@example.com'}),true);
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'production',STAFF_EMAILS:'staff@example.com'}),false);
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'staging',STAFF_EMAILS:''}),false);
  assert.equal(supportAIEnabled({SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'subscriber'}),false);
 });
 
