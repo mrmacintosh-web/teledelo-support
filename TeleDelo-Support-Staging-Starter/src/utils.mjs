@@ -1,6 +1,12 @@
 export const statuses = ['open','in_progress','waiting_customer','resolved'];
 export const issues = ['calls','messages','business','receptionist','billing','login','hours','cancel','layout','payment','other'];
 export function cleanEmail(v){return String(v||'').trim().toLowerCase()}
+// On the public staging hostname, only approved staff test addresses can submit or sign in.
+export function stagingEmailAllowed(env,email){
+  if(env.ENVIRONMENT!=='staging')return true;
+  const approved=String(env.STAFF_EMAILS||'').split(',').map(cleanEmail).filter(validEmail);
+  return approved.includes(cleanEmail(email));
+}
 export function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)&&v.length<=180}
 export function trimmed(v,min,max){if(typeof v!=='string')return null; const s=v.trim();return s.length>=min&&s.length<=max?s:null}
 export function normalizeTicket(obj){const name=trimmed(obj.name,2,100),business=trimmed(obj.business,2,180),description=trimmed(obj.details,10,3000),email=cleanEmail(obj.email),issue=String(obj.issue||'other'),urgency=obj.urgency==='service_down'?'service_down':'normal';if(!name||!business||!description||!validEmail(email)||!issues.includes(issue))return null;return {name,business,description,email,issue,urgency}}
