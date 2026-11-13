@@ -59,7 +59,53 @@ function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function openSupport(){lastFocus=document.activeElement;$('supportOverlay').hidden=false;$('formStage').hidden=false;$('previewStage').hidden=true;$('supportForm').reset();$('custIssue').value=current?.id||'other';$('custName').focus();document.body.style.overflow='hidden';loadCaptcha()}
 function closeSupport(){$('supportOverlay').hidden=true;document.body.style.overflow='';lastFocus?.focus()}
 function currentRequest(){const form=$('supportForm');const f=new FormData(form);const g=getGuide(f.get('issue'));return `Name: ${f.get('name')}\nEmail: ${f.get('email')}\nBusiness: ${f.get('business')}\nIssue: ${g?.title||'Something else'}\n\nWhat happened:\n${f.get('details')}`}
-$('helpSearch').addEventListener('input',renderList);$('helpSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){const matches=document.querySelector('[data-guide]');if(matches){e.preventDefault();openGuide(matches.dataset.guide)}}});$('clearSearch').onclick=()=>{$('helpSearch').value='';renderList();$('helpSearch').focus()};document.addEventListener('click',e=>{const btn=e.target.closest('[data-guide]');if(btn)openGuide(btn.dataset.guide)});$('allHelp').onclick=()=>goHome();$('prevStep').onclick=()=>{stepIndex=Math.max(0,stepIndex-1);renderStep()};$('nextStep').onclick=nextStep;
+async function askAI(e){
+  e.preventDefault();
+  const question=$('helpSearch').value.trim();
+  const panel=$('aiAnswerPanel'),answer=$('aiAnswerText'),submit=$('askAI');
+  panel.hidden=false;
+  answer.classList.remove('ai-error');
+  $('aiAnswerHeading').textContent='Suggested next steps';
+  $('aiAnswerDisclosure').textContent='AI-generated guidance based on general Help Center material. The assistant cannot view your account or make changes.';
+  if(question.length<3){
+    answer.textContent='Please describe what you need help with in at least a few words.';
+    answer.classList.add('ai-error');
+    $('helpSearch').focus();
+    return;
+  }
+  answer.textContent='Finding guidance for your question…';
+  submit.disabled=true;
+  submit.setAttribute('aria-busy','true');
+  try{
+    const res=await fetch('/help/api/ai/ask',{
+      method:'POST',
+      credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question,consent:true})
+    });
+    const data=await res.json();
+    if(!res.ok)throw Error(data.error||'AI guidance is unavailable right now.');
+    if(typeof data.answer!=='string'||!data.answer.trim())throw Error('No guidance was returned. Please contact support.');
+    answer.textContent=data.answer.trim();
+    if(typeof data.disclosure==='string')$('aiAnswerDisclosure').textContent=data.disclosure;
+  }catch(err){
+    answer.classList.add('ai-error');
+    answer.textContent=err.message||'Unable to get an AI response right now. You can still browse guides or contact our team.';
+  }finally{
+    submit.disabled=false;
+    submit.removeAttribute('aria-busy');
+  }
+}
+$('helpSearch').addEventListener('input',renderList);
+$('aiAskForm').addEventListener('submit',askAI);
+$('clearSearch').onclick=()=>{$('helpSearch').value='';renderList();$('helpSearch').focus()};
+$('aiAnswerClose').onclick=()=>{$('aiAnswerPanel').hidden=true};
+$('aiAnswerAgain').onclick=()=>{$('aiAnswerPanel').hidden=true;$('helpSearch').focus()};
+$('aiAnswerSupport').onclick=()=>{
+  const question=$('helpSearch').value.trim();
+  openSupport();
+  if(question)$('custDetails').value=question.slice(0,1800);
+};document.addEventListener('click',e=>{const btn=e.target.closest('[data-guide]');if(btn)openGuide(btn.dataset.guide)});$('allHelp').onclick=()=>goHome();$('prevStep').onclick=()=>{stepIndex=Math.max(0,stepIndex-1);renderStep()};$('nextStep').onclick=nextStep;
 $('guideSupport').onclick=openSupport;$('homeSupport').onclick=openSupport;$('emptySupport').onclick=openSupport;$('closeSupport').onclick=closeSupport;$('cancelSupport').onclick=closeSupport;$('supportOverlay').addEventListener('click',e=>{if(e.target===$('supportOverlay'))closeSupport()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('supportOverlay').hidden)closeSupport()});
 $('custIssue').innerHTML=guides.map(g=>`<option value="${g.id}">${g.title}</option>`).join('')+'<option value="other">Something else</option>';
 
