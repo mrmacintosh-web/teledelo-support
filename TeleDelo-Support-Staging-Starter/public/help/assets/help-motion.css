@@ -1,0 +1,61 @@
+/* Motion accents for the existing TeleDelo Help Center.
+   Retains the original fonts, palette, spacing, and interaction logic. */
+:root{--help-ease:cubic-bezier(.16,1,.3,1)}
+.topbar{box-shadow:0 3px 18px rgba(15,25,36,.018)}
+.topbar .wordmark,.topbar .toplink{transition:color .2s ease}
+.topbar .wordmark:hover,.topbar .toplink:hover{color:#2f5f9c}
+.topbar .nav-btn,.btn,.quick-link,.text-btn{
+  transition:transform .32s var(--help-ease),box-shadow .26s,border-color .25s,background .25s,color .25s;
+}
+.topbar .nav-btn:hover,.outline-btn:hover,.quick-link:hover{
+  transform:translateY(-2px);box-shadow:0 8px 23px rgba(15,25,36,.08);
+}
+.btn-dark:hover,.banner-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,25,36,.14)}
+.btn:active,.nav-btn:active,.quick-link:active{transform:translateY(0);box-shadow:none}
+.hero h1{animation:help-enter .8s var(--help-ease) both}
+.hero p{animation:help-enter .83s var(--help-ease) .06s both}
+.search-shell{animation:help-enter .83s var(--help-ease) .12s both}
+.searchbar{transition:border-color .25s,box-shadow .34s var(--help-ease),transform .34s var(--help-ease)}
+.searchbar:focus-within{transform:translateY(-2px)}
+.intro-line,.more,.support-banner{animation:help-enter .78s var(--help-ease) .12s both}
+.tile{
+  animation:help-enter .66s var(--help-ease) both;
+  transition:transform .35s var(--help-ease),border-color .25s,box-shadow .32s var(--help-ease),background .25s;
+}
+.tile:nth-child(2){animation-delay:.045s}
+.tile:nth-child(3){animation-delay:.09s}
+.tile:nth-child(4){animation-delay:.135s}
+.tile:nth-child(5){animation-delay:.18s}
+.tile:nth-child(6){animation-delay:.225s}
+.tile:hover{transform:translateY(-5px);box-shadow:0 17px 37px rgba(17,35,51,.085)}
+.tile:active{transform:translateY(-1px)}
+.tile-icon{transition:background .3s,color .3s,transform .4s var(--help-ease)}
+.tile:hover .tile-icon{background:#e5eef8;transform:scale(1.045)}
+.guide-area:not([hidden]) .guide-head,
+.guide-area:not([hidden]) .step-panel,
+.guide-area:not([hidden]) .visual-panel{animation:help-enter .6s var(--help-ease) both}
+.guide-area:not([hidden]) .visual-panel{animation-delay:.08s}
+.step-content{animation:help-fade .35s ease both}
+.step-panel,.visual-panel{transition:box-shadow .3s}
+.step-panel:hover,.visual-panel:hover{box-shadow:0 12px 30px rgba(15,25,36,.035)}
+.modal-veil:not([hidden]){animation:help-backdrop .25s ease both}
+.modal-veil:not([hidden]) .modal{animation:help-dialog .4s var(--help-ease) both}
+.modal .frow input,.modal .frow select,.modal .frow textarea{
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.modal .frow :is(input,select,textarea):focus{
+  border-color:#8aaccb;outline:none;box-shadow:0 0 0 4px rgba(47,95,156,.1);
+}
+@keyframes help-enter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes help-fade{from{opacity:0}to{opacity:1}}
+@keyframes help-backdrop{from{opacity:0}to{opacity:1}}
+@keyframes help-dialog{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){
+  .topbar .wordmark,.topbar .toplink,.topbar .nav-btn,.btn,.quick-link,.text-btn,
+  .hero h1,.hero p,.search-shell,.searchbar,.intro-line,.more,.support-banner,.tile,.tile-icon,
+  .guide-area:not([hidden]) .guide-head,.guide-area:not([hidden]) .step-panel,
+  .guide-area:not([hidden]) .visual-panel,.step-content,.modal-veil:not([hidden]),
+  .modal-veil:not([hidden]) .modal,.modal .frow input,.modal .frow select,.modal .frow textarea{
+    animation:none!important;transition:none!important;transform:none!important;
+  }
+}
