@@ -45,6 +45,17 @@ test('public flow authenticates by email, isolates tickets, and blocks staff acc
   const ck=exchange.headers.get('set-cookie').split(';')[0];assert.ok(ck.startsWith('td_support_session='));
   const secondExchange=await worker.fetch(req('/help/api/auth/exchange','POST',{token:u.searchParams.get('auth')}),x);assert.equal(secondExchange.status,401);
   const sessionHeaders={'cookie':ck};
+  // A real staging AI beta requires the same verified customer session,
+  // plus exact inclusion in the configured staff tester allowlist.
+  x.ENVIRONMENT='staging';x.SUPPORT_AUTH_MODE='staging';x.SUPPORT_AI_ENABLED='true';
+  x.STAFF_EMAILS='staff@example.test,alice@example.com';
+  x.AI={async run(){return {choices:[{message:{content:'Check Business phone in your dashboard. Then make a test call.'}}]}}};
+  const aiReq={question:'Why are my calls not coming through?',consent:true};
+  const noAIAuth=await worker.fetch(req('/help/api/ai/ask','POST',aiReq),x);
+  assert.equal(noAIAuth.status,401);
+  const aiReply=await worker.fetch(req('/help/api/ai/ask','POST',aiReq,sessionHeaders),x);
+  assert.equal(aiReply.status,200);
+  assert.match((await aiReply.json()).answer,/Business phone/);
   const tickets=await (await worker.fetch(req('/help/api/tickets','GET',null,sessionHeaders),x)).json();assert.equal(tickets.tickets.length,1);
   const reply=await worker.fetch(req(`/help/api/tickets/${reference}/reply`,'POST',{message:'I tested another phone.'},sessionHeaders),x,context);assert.equal(reply.status,200);
   assert.equal(backgroundJobs.length,1,'a customer reply should schedule its staff notification');
