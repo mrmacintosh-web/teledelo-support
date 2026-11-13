@@ -1,0 +1,27 @@
+/* Optional AI answer in the existing TeleDelo Help Center search experience. */
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.ai-searchbar{padding-right:7px;gap:12px}
+.ai-searchbar .icon{flex-shrink:0}
+.ai-searchbar input{flex:1;min-width:0}
+.ai-submit{border:1px solid #142435;background:#142435;color:#fff;border-radius:12px;min-width:105px;min-height:47px;padding:0 14px;font:700 13px/1.2 var(--sans);display:inline-flex;gap:7px;align-items:center;justify-content:center;white-space:nowrap;transition:background .18s ease,transform .18s ease}
+.ai-submit:hover{background:#29445d;transform:translateY(-1px)}
+.ai-submit:focus-visible,.ai-answer-close:focus-visible{outline:3px solid #86a7ce;outline-offset:3px}
+.ai-submit .icon{color:currentColor;width:15px;height:15px}
+.ai-submit:disabled{opacity:.65;cursor:wait;transform:none}
+.hero .ai-consent-note{max-width:710px;margin:11px auto 0;color:#71808c;font-size:11px;line-height:1.65;text-align:left}
+.ai-answer-panel{width:min(820px,100%);margin:5px auto 27px;background:#fff;border:1px solid #dde3e5;border-radius:20px;box-shadow:0 16px 45px rgba(19,36,52,.065);padding:28px 32px;animation:ai-appear .28s ease both}
+.ai-answer-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ai-answer-eyebrow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:#19314a;font-size:12px}
+.ai-symbol{font-size:19px;color:#406a90;line-height:1}
+.ai-preview-label{margin-left:4px;color:#6f8090;font-weight:500}
+.ai-answer-close{width:32px;height:32px;border:1px solid #dce2e6;border-radius:9px;background:#fff;color:#536577;font-size:21px;line-height:1;cursor:pointer}
+.ai-answer-panel h2{font:400 29px/1.18 var(--serif);letter-spacing:-.04em;margin:15px 0 12px;color:var(--ink)}
+.ai-answer-text{font-size:14px;line-height:1.85;color:#354657;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-answer-text.ai-error{color:#914343}
+.ai-answer-disclosure{font-size:11px;line-height:1.6;color:#788592;margin:16px 0 0}
+.ai-answer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:19px}
+.ai-answer-actions .btn{font-size:12px;min-height:40px}
+.ai-answer-actions .icon{width:15px;height:15px}
+@keyframes ai-appear{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.ai-searchbar{height:auto;min-height:57px;padding:6px;gap:6px;border-radius:15px}.ai-searchbar>svg{margin-left:7px;width:18px;height:18px}.ai-submit{min-height:44px;min-width:72px;padding:0 9px;font-size:12px}.ai-submit .icon{display:none}.ai-searchbar input{font-size:13px}.hero .ai-consent-note{font-size:10px;padding:0 4px}.ai-answer-panel{padding:21px 19px;border-radius:16px}.ai-answer-panel h2{font-size:26px}.ai-answer-actions{flex-direction:column;align-items:stretch}.ai-answer-actions .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.ai-answer-panel{animation:none}.ai-submit{transition:none}}
