@@ -20,7 +20,7 @@ async function allowAIRequest(env,userId) {
   return true;
 }
 
-export async function answerSupportQuestion(req,env) {
+export async function answerSupportQuestion(req,env,{stagingEmail=null}={}) {
   // This handler is intentionally NOT enabled in the shipped staging configuration.
   if (!supportAIEnabled(env)) return responseError('AI help is not enabled yet. Please use a help guide or contact our team.',503);
   if (req.headers.get('content-type')?.split(';')[0]?.trim() !== 'application/json') return responseError('JSON required',415);
@@ -34,20 +34,40 @@ export async function answerSupportQuestion(req,env) {
   if (!question) return responseError('Enter a question between 3 and 1,000 characters',400);
   if (body?.consent!==true) return responseError('Please choose Ask AI to agree to AI processing of your question.',400);
 
-  const access=await resolveSubscriberFromBackend(req,env);
-  if (!access.ok) {
-    if (access.reason==='sign_in_required') return responseError('Please sign in to your TeleDelo account.',401);
-    if (access.reason==='subscription_required') return responseError('An active eligible TeleDelo subscription is required.',403);
-    return responseError('Unable to verify your account right now. Please try again or contact our team.',503);
+  let verifiedUserId;
+  if (env.SUPPORT_AUTH_MODE === 'staging' && env.ENVIRONMENT === 'staging') {
+    // This email is obtained from an existing verified, HttpOnly customer session
+    // by worker.mjs. Never accept an email or identity from the posted JSON.
+    const email=cleanEmail(stagingEmail);
+    if (!email) return responseError('For this staging test, sign in through My Support Requests first.',401);
+    const allowed=String(env.STAFF_EMAILS||'').split(',').map(cleanEmail).filter(Boolean);
+    if (!allowed.includes(email)) return responseError('AI staging access is limited to approved testers.',403);
+    verifiedUserId='staging:'+email;
+  } else {
+    const access=await resolveSubscriberFromBackend(req,env);
+    if (!access.ok) {
+      if (access.reason==='sign_in_required') return responseError('Please sign in to your TeleDelo account.',401);
+      if (access.reason==='subscription_required') return responseError('An active eligible TeleDelo subscription is required.',403);
+      return responseError('Unable to verify your account right now. Please try again or contact our team.',503);
+    }
+    verifiedUserId=access.identity.userId;
   }
-  if (!await allowAIRequest(env,access.identity.userId)) return responseError('AI question limit reached. Please contact our support team for help.',429);
+  if (!await allowAIRequest(env,verifiedUserId)) return responseError('AI question limit reached. Please contact our support team for help.',429);
   const messages=buildSupportAIMessages(question,SUPPORT_GUIDANCE);
   if (!messages) return responseError('AI guidance is unavailable. Please contact our team.',503);
   try {
-    const output=await env.AI.run('@cf/meta/llama-3.1-8b-instruct',{
-      messages, max_tokens:420, temperature:0.2
+    // The older Llama 3.1 8B model was deprecated in May 2026.
+    // Gemma 4 is a currently supported Cloudflare-hosted chat model.
+    const output=await env.AI.run('@cf/google/gemma-4-26b-a4b-it',{
+      messages,
+      max_completion_tokens:420,
+      temperature:0.2,
+      chat_template_kwargs:{enable_thinking:false}
     });
-    const answer=typeof output?.response==='string' ? output.response.trim() : '';
+    const content=output?.choices?.[0]?.message?.content;
+    const answer=typeof output?.response==='string' ? output.response.trim() :
+      typeof content==='string' ? content.trim() :
+      Array.isArray(content) ? content.filter(x=>x?.type==='text'&&typeof x.text==='string').map(x=>x.text).join('\n').trim() : '';
     if (!answer || answer.length>8000) throw Error('Invalid AI response');
     return responseJson({answer,disclosure:'AI-generated guidance based on general Help Center material. It cannot see your account or make changes.'});
   } catch (err) {
