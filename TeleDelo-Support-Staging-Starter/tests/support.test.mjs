@@ -25,8 +25,14 @@ test('public flow authenticates by email, isolates tickets, and blocks staff acc
  };
  try{
   const x=env();
+  const backgroundJobs=[];
+  const context={waitUntil(promise){backgroundJobs.push(promise)}};
   const payload={name:'Alice Smith',business:'Test Auto Repair',email:'ALICE@example.com',issue:'calls',details:'Our forwarded calls do not reach the receptionist.',urgency:'service_down',turnstileToken:'valid'};
-  const created=await worker.fetch(req('/help/api/tickets','POST',payload),x);assert.equal(created.status,201);const {reference}=await created.json();assert.match(reference,/^TD-[A-F0-9]{10}$/);
+  const created=await worker.fetch(req('/help/api/tickets','POST',payload),x,context);assert.equal(created.status,201);const {reference}=await created.json();assert.match(reference,/^TD-[A-F0-9]{10}$/);
+  assert.equal(backgroundJobs.length,1,'a background notification job should be scheduled');
+  await Promise.all(backgroundJobs.splice(0));
+  assert.match(x.sent.map(m=>m.subject).join('|'),/We received your request/);
+  assert.match(x.sent.map(m=>m.subject).join('|'),/New support request/);
   const notAuthed=await worker.fetch(req('/help/api/tickets'),x);assert.equal(notAuthed.status,401);
   const badOrigin=await worker.fetch(req('/help/api/tickets','POST',payload,{origin:'https://evil.example'}),x);assert.equal(badOrigin.status,403);
   const noAdmin=await worker.fetch(req('/help/admin/api/tickets'),x);assert.equal(noAdmin.status,403);
@@ -40,7 +46,10 @@ test('public flow authenticates by email, isolates tickets, and blocks staff acc
   const secondExchange=await worker.fetch(req('/help/api/auth/exchange','POST',{token:u.searchParams.get('auth')}),x);assert.equal(secondExchange.status,401);
   const sessionHeaders={'cookie':ck};
   const tickets=await (await worker.fetch(req('/help/api/tickets','GET',null,sessionHeaders),x)).json();assert.equal(tickets.tickets.length,1);
-  const reply=await worker.fetch(req(`/help/api/tickets/${reference}/reply`,'POST',{message:'I tested another phone.'},sessionHeaders),x);assert.equal(reply.status,200);
+  const reply=await worker.fetch(req(`/help/api/tickets/${reference}/reply`,'POST',{message:'I tested another phone.'},sessionHeaders),x,context);assert.equal(reply.status,200);
+  assert.equal(backgroundJobs.length,1,'a customer reply should schedule its staff notification');
+  await Promise.all(backgroundJobs.splice(0));
+  assert.match(x.sent.map(m=>m.subject).join('|'),/Customer replied/);
   const detail=await (await worker.fetch(req(`/help/api/tickets/${reference}`,'GET',null,sessionHeaders),x)).json();assert.equal(detail.messages.length,2);
   const logout=await worker.fetch(req('/help/api/logout','POST',{},sessionHeaders),x);assert.equal(logout.status,200);
   const postLogout=await worker.fetch(req('/help/api/me','GET',null,sessionHeaders),x);assert.equal(postLogout.status,401);
