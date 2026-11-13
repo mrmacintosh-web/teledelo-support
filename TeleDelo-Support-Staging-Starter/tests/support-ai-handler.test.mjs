@@ -12,7 +12,7 @@ function makeEnv() {
   const env={
     AI:{async run(model,input){
       calls.push({model,input});
-      return {response:'First check Business phone. Then make a test call. If the issue continues, contact human support.'};
+      return {choices:[{message:{content:'First check Business phone. Then make a test call. If the issue continues, contact human support.'}}]};
     }},
     DB:{prepare(sql){return{bind(...args){return{
       async first(){return {n:usage.length}},
@@ -57,7 +57,7 @@ test('paid verified customers get grounded guidance only after checking existing
   assert.match(body.answer,/Business phone/);
   assert.match(body.disclosure,/cannot see your account/);
   assert.equal(calls.length,1);
-  assert.match(calls[0].model,/^@cf\//);
+  assert.equal(calls[0].model,'@cf/google/gemma-4-26b-a4b-it');
   assert.match(calls[0].input.messages[0].content,/Calls not coming through/);
   assert.equal(usage.length,1);
  }finally{globalThis.fetch=old}
@@ -89,4 +89,27 @@ test('per-subscriber daily AI cap prevents unlimited inference',async()=>{
   assert.equal(calls.length,20);
   assert.equal(usage.length,20);
  }finally{globalThis.fetch=old}
+});
+
+test('staging AI requires a verified tester session, not an arbitrary browser email',async()=>{
+ const {env,calls}=makeEnv();
+ env.SUPPORT_AUTH_MODE='staging';
+ env.ENVIRONMENT='staging';
+ env.STAFF_EMAILS='tester@example.com';
+ const input=request();
+ assert.equal((await answerSupportQuestion(input,env)).status,401);
+ assert.equal((await answerSupportQuestion(request(),env,{stagingEmail:'outsider@example.com'})).status,403);
+ const allowed=await answerSupportQuestion(request(),env,{stagingEmail:'TeStEr@example.com'});
+ assert.equal(allowed.status,200);
+ assert.equal(calls.length,1);
+});
+
+test('staging AI can never run on a production environment even with its feature flag',async()=>{
+ const {env,calls}=makeEnv();
+ env.SUPPORT_AUTH_MODE='staging';
+ env.ENVIRONMENT='production';
+ env.STAFF_EMAILS='tester@example.com';
+ const res=await answerSupportQuestion(request(),env,{stagingEmail:'tester@example.com'});
+ assert.equal(res.status,503);
+ assert.equal(calls.length,0);
 });
