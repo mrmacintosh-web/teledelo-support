@@ -68,6 +68,16 @@ For customers with multiple eligible businesses, display a business selector and
 
 ## 4. AI support — proposed opt-in experience
 
+**Search bar design (now implemented in this review branch):**
+- Keep the existing `How can we help?` headline and the same large search field.
+- Typing continues to filter ordinary help-guide cards; pressing **Enter** or **Ask AI** sends the question to `POST /help/api/ai/ask`.
+- The AI answer appears **under the existing search bar** as concise, readable suggested steps, with **Contact support** and **Ask another question** actions. Human contact pre-fills the customer's question for review; it never creates a ticket without submission.
+- The user sees an AI disclosure, privacy warning, and clear error fallback. Answer rendering uses text, not injected HTML.
+- The endpoint is deliberately disabled until `SUPPORT_AUTH_MODE=subscriber`, `SUPPORT_AI_ENABLED=true`, a valid first-party `SUPPORT_ENTITLEMENTS_URL`, `RATE_LIMIT_SALT`, D1, and a Workers AI binding named `AI` are configured. **Do not set the enable flag before Angel's backend review and product knowledge approval.**
+- Current knowledge is a **draft subset of the Help Center guides**, in `src/support-knowledge.mjs`. Angel must approve and maintain that content before launch; the AI cannot verify real-time account data.
+- The server verifies the browser's existing login and an eligible paid business before inference, uses a consent flag, applies 20-questions-per-24-hours per verified user, and returns a friendly fallback when the model is unavailable.
+- To bind Workers AI later in the *approved production* Wrangler configuration, add `"ai":{"binding":"AI"}` and keep `SUPPORT_AI_ENABLED` false until the complete rollout passes tests. Cloudflare Workers AI inference has separate pricing/limits.
+
 - Show **Ask TeleDelo AI** / **Contact Support**. AI must be labeled as AI.
 - Start with **approved troubleshooting guides only** (read-only), not live calls, voicemail, recordings, invoices, account settings, or credentials.
 - If unsure or customer wants a person, clearly offer **Contact Support**; let the user transfer their question into a human ticket with review/consent. Do not pretend a ticket was created until the ticket API confirms success.
