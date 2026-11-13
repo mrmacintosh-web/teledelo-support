@@ -19,6 +19,7 @@
 .ai-answer-text{font-size:14px;line-height:1.85;color:#354657;white-space:pre-wrap;overflow-wrap:anywhere}
 .ai-answer-text.ai-error{color:#914343}
 .ai-answer-disclosure{font-size:11px;line-height:1.6;color:#788592;margin:16px 0 0}
+.ai-answer-signin{margin:12px 0 0;font-size:12px;font-weight:650}.ai-answer-signin a{color:#24598e;text-decoration:underline;text-underline-offset:3px}
 .ai-answer-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:19px}
 .ai-answer-actions .btn{font-size:12px;min-height:40px}
 .ai-answer-actions .icon{width:15px;height:15px}
