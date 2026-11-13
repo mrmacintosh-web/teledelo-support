@@ -1,0 +1,17 @@
+{
+  "name": "teledelo-support-staging-starter",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy:staging": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply teledelo-support-staging --local",
+    "db:staging": "wrangler d1 migrations apply teledelo-support-staging --remote",
+    "verify:staging": "node scripts/verify-staging.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.48.0"
+  }
+}

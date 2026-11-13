@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "teledelo-support-production",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-11-11",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "teledelo-support-production",
+      "database_id": "REPLACE_WITH_SEPARATE_PRODUCTION_UUID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "remote": true
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "PUBLIC_ORIGIN": "",
+    "FROM_EMAIL": "notifications@teledelo.com",
+    "REPLY_TO_EMAIL": "support@teledelo.com",
+    "TURNSTILE_SITE_KEY": "",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "STAFF_EMAILS": "",
+    "STAFF_NOTIFY_EMAIL": ""
+  }
+}

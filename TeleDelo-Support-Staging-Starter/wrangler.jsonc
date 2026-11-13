@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "teledelo-support-staging",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-11-11",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "teledelo-support-staging",
+      "database_id": "REPLACE_WITH_STAGING_D1_UUID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "remote": true
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/5 * * * *"
+    ]
+  },
+  "vars": {
+    "ENVIRONMENT": "staging",
+    "PUBLIC_ORIGIN": "",
+    "FROM_EMAIL": "notifications@teledelo.com",
+    "REPLY_TO_EMAIL": "support@teledelo.com",
+    "TURNSTILE_SITE_KEY": "",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "STAFF_EMAILS": "",
+    "STAFF_NOTIFY_EMAIL": ""
+  }
+}
