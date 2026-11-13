@@ -65,6 +65,7 @@ async function askAI(e){
   const panel=$('aiAnswerPanel'),answer=$('aiAnswerText'),submit=$('askAI');
   panel.hidden=false;
   answer.classList.remove('ai-error');
+  $('aiSignInHint').hidden=true;
   $('aiAnswerHeading').textContent='Suggested next steps';
   $('aiAnswerDisclosure').textContent='AI-generated guidance based on general Help Center material. The assistant cannot view your account or make changes.';
   if(question.length<3){
@@ -84,7 +85,10 @@ async function askAI(e){
       body:JSON.stringify({question,consent:true})
     });
     const data=await res.json();
-    if(!res.ok)throw Error(data.error||'AI guidance is unavailable right now.');
+    if(!res.ok){
+      $('aiSignInHint').hidden=res.status!==401;
+      throw Error(data.error||'AI guidance is unavailable right now.');
+    }
     if(typeof data.answer!=='string'||!data.answer.trim())throw Error('No guidance was returned. Please contact support.');
     answer.textContent=data.answer.trim();
     if(typeof data.disclosure==='string')$('aiAnswerDisclosure').textContent=data.disclosure;
