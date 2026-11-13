@@ -42,7 +42,7 @@ The main `teledelo.com` site continues to be served by its existing host. The in
 - Staff pages and API live under `/help/admin*`; protect them using a Cloudflare Access application **and** signed-JWT verification inside the Worker (including on the `workers.dev` URL).
 - D1 is not exposed directly to browsers; all reads and writes are done by the Worker.
 - No card details, passwords, or verification codes should be put into support tickets.
-- Branded email notifications are queued in D1, retried, and sent by a cron job every five minutes. Email is at-least-once: an exceptional crash after sending can cause a duplicate notice.
+- Branded ticket confirmations, staff alerts, and reply notifications are persisted in D1 and dispatched immediately after a successful request with `ctx.waitUntil()`, without blocking the form response. The five-minute cron remains as a recovery/retry mechanism if immediate dispatch is interrupted or fails. Delivery is typically within seconds, but not guaranteed; `waitUntil()` has a 30-second post-response limit, and exceptional crashes after sending can cause duplicate notices.
 - Direct customer sign-in emails are sent immediately. If sending fails, the login request fails rather than falsely reporting a working link.
 - State-changing APIs check the exact same-origin `Origin` header and require JSON.
 
