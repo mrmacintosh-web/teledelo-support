@@ -70,3 +70,21 @@ npm run deploy:staging
 ## Blockers to production
 
 Authoritative paid-subscription checks from the existing TeleDelo backend, per-business D1 ownership, approved AI knowledge base, privacy/consent, global budgets and abuse protection, and a reviewed `teledelo.com/help` route that does not overwrite the main app.
+
+## Staff AI feedback dashboard
+
+After staging migration + deployment, staff can visit **`/help/admin/`** (existing Cloudflare Access protected staff inbox). The **AI feedback** section appears above Requests and shows, for the **last 30 days**:
+- Helpful votes (Yes) and how many distinct users selected Yes at least once
+- Not helpful votes (No) and how many distinct users selected No at least once
+- Helpful rate = Yes votes / (Yes + No votes)
+- Total ratings and total distinct users who submitted a rating
+
+The same person may vote on several different AI answers, and may choose both Yes and No on different answers, so **vote counts are not headcounts**, and Yes/No distinct-user counts must not be added together. The dashboard requires the existing staff Cloudflare Access JWT, loads only aggregated counts, and reveals no individual user identity or question.
+
+Use **Refresh** to update the statistics without leaving the ticket inbox. Before the `0002_ai_answer_feedback.sql` migration is applied, the section reports feedback is unavailable rather than displaying misleading zeroes.
+
+Direct D1 diagnostic (staging only, for authorized developers):
+
+```bash
+npx wrangler d1 execute teledelo-support-staging --remote --command "SELECT rating, COUNT(*) AS votes, COUNT(DISTINCT user_key_hash) AS distinct_voters FROM ai_answer_feedback WHERE rating IS NOT NULL AND rated_at >= unixepoch() - 30*86400 GROUP BY rating"
+```
