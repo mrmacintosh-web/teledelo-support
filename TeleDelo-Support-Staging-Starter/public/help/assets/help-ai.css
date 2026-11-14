@@ -32,6 +32,7 @@
 .ai-guide-link span{font-size:11px;line-height:1.55;color:#70808e}
 .ai-guide-link:hover{background:#f1f5f7;border-color:#a9bfce}
 .ai-guide-link:focus-visible,.ai-vote:focus-visible{outline:3px solid #86a7ce;outline-offset:2px}
+.ai-feedback[hidden],.ai-feedback-actions[hidden],.ai-feedback-status[hidden],.ai-related-guides[hidden]{display:none!important}
 .ai-feedback{border-top:1px solid #e8edef;margin-top:20px;padding-top:16px;display:flex;align-items:center;gap:11px;flex-wrap:wrap}
 .ai-feedback-question{font-size:12px;font-weight:600;color:#44566b}
 .ai-feedback-actions{display:flex;align-items:center;gap:7px}
