@@ -104,7 +104,7 @@ export async function submitSupportAIFeedback(req,env,{stagingEmail=null}={}) {
     body=JSON.parse(raw);
   } catch { return responseError('Invalid feedback request',400); }
   const id=body?.answerId,rating=body?.rating;
-  if (typeof id!=='string'||!/^[-a-f0-9]{36}$/i.test(id)||
+  if (typeof id!=='string'||!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(id)||
       !['helpful','unhelpful'].includes(rating)) return responseError('Invalid feedback',400);
   const access=await verifiedAIUser(req,env,stagingEmail);
   if (!access.ok) return responseError(access.error,access.status);
