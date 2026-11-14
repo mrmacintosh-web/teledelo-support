@@ -39,6 +39,25 @@ Under the existing `"vars"` object add:
 
 Keep `"ENVIRONMENT": "staging"`, `"STAFF_EMAILS"`, `"PUBLIC_ORIGIN"`, Cloudflare Access, D1, Email Sending and existing Turnstile settings unchanged. No model API key is necessary: Cloudflare uses the account binding. Do **not** add a live `teledelo.com` route.
 
+### Add a second tester WITHOUT adding staff privileges
+
+Edit your existing local `wrangler.jsonc`, inside the existing `"vars"` object (not below its closing bracket), and add:
+
+```json
+"STAGING_TEST_EMAILS": "angel@example.com,second-tester@example.com"
+```
+
+Use real addresses for your testers, and put a comma after the previous property. **Do not replace the `STAFF_EMAILS` value or add testing-only people to it.** They must not gain staff access simply to test the customer portal. `STAGING_TEST_EMAILS` and `STAFF_EMAILS` both permit using the staging customer's email-link sign-in and support forms; only `STAFF_EMAILS` can pass the staff backend allowlist (which also requires Cloudflare Access).
+
+Check the config's JSON syntax before deployment:
+
+```bash
+node -e "JSON.parse(require('node:fs').readFileSync('wrangler.jsonc','utf8')); console.log('valid JSON')"
+npm test && npm run deploy:staging
+```
+
+The new tester visits `/help/requests/`, requests a sign-in link with their **own** email (and completes Turnstile), then opens `/help/` in that same browser. Never send them your session cookie or email login link. Production does not accept `STAGING_TEST_EMAILS` as proof of being a subscriber.
+
 ```bash
 npm test
 npm run verify:staging
@@ -49,13 +68,13 @@ npm run deploy:staging
 ## Test the real AI
 
 1. Open `https://teledelo-support-staging.yashsunderraj.workers.dev/help/requests/`.
-2. Sign in with an email included exactly in the staging `STAFF_EMAILS` list (receive email link, then complete login).
+2. Sign in with an email included exactly in `STAFF_EMAILS` or `STAGING_TEST_EMAILS` (receive email link, then complete login).
 3. Open `https://teledelo-support-staging.yashsunderraj.workers.dev/help/` **in the same browser session**.
 4. Enter `My calls aren't coming through` in the existing large search bar, then press **Ask AI**.
 5. Confirm that you get the AI-generated answer below the search bar. Try the **Related help guides** buttons; they must open existing TeleDelo guides, not external AI-provided links.
 6. Select **Yes** or **No** under **Was this answer helpful?** and confirm the thank-you message. One answer can only be rated once; the D1 table stores only an answer ID, salted verified-user hash, rating and timestamps, never the question or AI text.
 7. Use **Talk to our team** to open a draft ticket with the question and best-matched category already selected. Verify that the ticket is **not** submitted until you explicitly fill out and send the form.
-8. Try again in a private browser window (without signing in). AI must return **401**. A signed-in address not on `STAFF_EMAILS` must return **403**. Do not attempt to use an actual paying customer's account for staging.
+8. Try again in a private browser window (without signing in). AI must return **401**. A signed-in address on neither `STAFF_EMAILS` nor `STAGING_TEST_EMAILS` must return **403**. Do not attempt to use an actual paying customer's account for staging.
 
 ## Precautions and expenses
 
@@ -88,3 +107,15 @@ Direct D1 diagnostic (staging only, for authorized developers):
 ```bash
 npx wrangler d1 execute teledelo-support-staging --remote --command "SELECT rating, COUNT(*) AS votes, COUNT(DISTINCT user_key_hash) AS distinct_voters FROM ai_answer_feedback WHERE rating IS NOT NULL AND rated_at >= unixepoch() - 30*86400 GROUP BY rating"
 ```
+
+## Export complete local source for Angel's coding assistant
+
+After pulling the latest review branch, run:
+
+```bash
+node scripts/export-handoff.mjs
+```
+
+The script writes `TeleDelo-Support-Integration-Handoff.zip` to the **repository root** (one directory above this starter folder). Download it using Codespaces Explorer. It archives **only committed GitHub source files**, including `INTEGRATION-HANDOFF.md`, all Help Center UI, Worker/D1 code, migrations and tests. It does **not** include your locally modified `wrangler.jsonc`, local secrets, `node_modules` or D1 data.
+
+Tell Angel's AI to begin with `INTEGRATION-HANDOFF.md` and to inspect the latest **main TeleDelo backend**, not to assume current Help Center email sign-in is production-ready.
