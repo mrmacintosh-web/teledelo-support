@@ -182,3 +182,17 @@ test('feedback disabled by default and cannot record a rating',async()=>{
  assert.equal(res.status,503);
  assert.equal(calls.length,0);
 });
+
+test('approved non-staff tester can ask AI and vote but is not in STAFF_EMAILS',async()=>{
+ const {env,feedback}=makeEnv();
+ env.ENVIRONMENT='staging';env.SUPPORT_AUTH_MODE='staging';
+ env.STAFF_EMAILS='staff@example.com';
+ env.STAGING_TEST_EMAILS='angel@example.com';
+ const answer=await answerSupportQuestion(request(),env,{stagingEmail:'ANGEL@example.com'});
+ assert.equal(answer.status,200);
+ const {answerId}=await answer.json();
+ assert.ok(answerId);
+ assert.equal((await submitSupportAIFeedback(feedbackRequest(answerId,'helpful'),env,{stagingEmail:'angel@example.com'})).status,200);
+ assert.equal(feedback.get(answerId).rating,'helpful');
+ assert.equal(env.STAFF_EMAILS.includes('angel@example.com'),false);
+});
