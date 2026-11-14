@@ -34,7 +34,19 @@
     <div id="aiAnswerText" class="ai-answer-text" role="status"></div>
     <p id="aiAnswerDisclosure" class="ai-answer-disclosure">AI guidance may be incorrect. The assistant cannot see your account or change settings.</p>
     <p id="aiSignInHint" class="ai-answer-signin" hidden><a href="/help/requests/">Sign in to My Support Requests to test AI</a></p>
-    <div class="ai-answer-actions"><button type="button" id="aiAnswerSupport" class="btn btn-dark">Contact support <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button><button type="button" id="aiAnswerAgain" class="btn outline-btn">Ask another question</button></div>
+    <section class="ai-related-guides" id="aiRelatedGuides" hidden aria-labelledby="aiRelatedHeading">
+      <h3 id="aiRelatedHeading">Related help guides</h3>
+      <div id="aiRelatedLinks" class="ai-related-links"></div>
+    </section>
+    <div class="ai-feedback" id="aiFeedback" hidden aria-label="AI answer feedback">
+      <span class="ai-feedback-question">Was this answer helpful?</span>
+      <div class="ai-feedback-actions" id="aiFeedbackActions">
+        <button type="button" id="aiFeedbackYes" class="ai-vote" aria-label="Yes, this answer was helpful">Yes</button>
+        <button type="button" id="aiFeedbackNo" class="ai-vote" aria-label="No, this answer was not helpful">No</button>
+      </div>
+      <span id="aiFeedbackStatus" role="status" class="ai-feedback-status" hidden></span>
+    </div>
+    <div class="ai-answer-actions"><button type="button" id="aiAnswerSupport" class="btn btn-dark">Talk to our team <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button><button type="button" id="aiAnswerAgain" class="btn outline-btn">Ask another question</button></div>
   </section>
   <div class="count simple-result-count" id="matchCount" aria-live="polite"></div>
   <div id="topicGrid" class="tiles"></div><div class="empty" id="emptyState" hidden><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><h3>Can't find what you need?</h3><p>Try fewer words, or tell us what's happening.</p><button class="text-btn" id="emptySupport">Get help from our team</button></div>
