@@ -56,10 +56,138 @@ return `<div class="mini-sidebar"><div class="mini-brand">TeleDelo</div>${menu}<
 function renderStep(){const s=current.steps[stepIndex];$('solvedPanel').hidden=!solved;$('stepContent').hidden=solved;$('stepCount').textContent=solved?'Finished':`Step ${stepIndex+1} of ${current.steps.length}`;$('stepProgress').innerHTML=current.steps.map((_,i)=>`<span class="progress-unit ${i<=stepIndex?'active':''}"></span>`).join('');$('stepNumber').textContent=String(stepIndex+1).padStart(2,'0');$('stepTitle').textContent=s.title;$('stepText').textContent=s.text;$('stepTip').hidden=!s.tip;$('stepTip').innerHTML=s.tip?`<strong>Helpful to know</strong><div>${s.tip}</div>`:'';$('mockWindow').innerHTML=visual(s);$('prevStep').hidden=solved;$('nextStep').textContent=solved?'Back to help':stepIndex===current.steps.length-1?'This helped me':'Next step →';$('prevStep').disabled=stepIndex===0;$('prevStep').style.visibility=stepIndex===0?'hidden':'visible'}
 function nextStep(){if(solved){goHome();return}if(stepIndex<current.steps.length-1){stepIndex++;renderStep()}else{solved=true;renderStep()}}
 function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+// AI recommendations are matched against the existing guide catalog, never AI-provided links.
+const aiIntentHints={
+ calls:/\b(call|calls|ring|ringing|forward|forwarding|voicemail|disconnect|disconnected|phone|outage)\b/i,
+ messages:/\b(message|messages|transcript|recording|conversations?|call history|call log)\b/i,
+ business:/\b(business name|company name|rename|edit business)\b/i,
+ receptionist:/\b(receptionist|voice|tone|speaking|sounds|answering wrong)\b/i,
+ billing:/\b(bill|billing|invoices?|minutes?|usage|cost|plans?|overage|charges?|owe|owed)\b/i,
+ login:/\b(sign in|log in|login|password|locked out|reset)\b/i,
+ hours:/\b(hours|opening|closing|closed|schedule|services)\b/i,
+ cancel:/\b(cancel|cancellation|terminate|end subscription)\b/i,
+ layout:/\b(dashboard|layout|menu|missing features|different)\b/i,
+ payment:/\b(payment|declined|credit card|failed to pay|payment failed)\b/i
+};
+const ignoredAIWords=new Set(['the','and','for','are','you','your','our','with','can','how','why','what','when','who','not','its','this','that','from','them','have','has','need','would','should','about','want','does','dont','isnt','aren','their','into','just']);
+function recommendAIGuides(question){
+ const words=new Set((question.toLowerCase().match(/[a-z0-9]+/g)||[]).filter(w=>w.length>2&&!ignoredAIWords.has(w)));
+ return guides.map(g=>{
+   const title=g.title.toLowerCase(),description=(g.description+' '+g.keywords).toLowerCase();
+   let score=aiIntentHints[g.id]?.test(question)?9:0;
+   for(const w of words){if(title.includes(w))score+=3;else if(description.includes(w))score++}
+   return {guide:g,score};
+ }).filter(x=>x.score>=4).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.guide);
+}
+let lastAIQuestion='',lastAIAnswerId=null,lastAIRecommended=[],aiBusy=false,aiFeedbackPending=false;
+function resetAIEnhancements(){
+ lastAIAnswerId=null;lastAIRecommended=[];
+ $('aiRelatedGuides').hidden=true;
+ $('aiRelatedLinks').replaceChildren();
+ $('aiFeedback').hidden=true;$('aiFeedbackActions').hidden=false;
+ $('aiFeedbackStatus').hidden=true;$('aiFeedbackStatus').textContent='';
+ $('aiFeedbackYes').disabled=false;$('aiFeedbackNo').disabled=false;
+}
+function showAIEnhancements(question,answerId){
+ lastAIRecommended=recommendAIGuides(question);
+ for(const g of lastAIRecommended){
+   const button=document.createElement('button');
+   button.type='button';button.className='ai-guide-link';button.dataset.guide=g.id;
+   const title=document.createElement('strong');title.textContent=g.title;
+   const desc=document.createElement('span');desc.textContent=g.description;
+   button.append(title,desc);$('aiRelatedLinks').append(button);
+ }
+ $('aiRelatedGuides').hidden=lastAIRecommended.length===0;
+ lastAIAnswerId=typeof answerId==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(answerId)?answerId:null;
+ $('aiFeedback').hidden=!lastAIAnswerId;
+}
+async function sendAIFeedback(rating){
+ if(!lastAIAnswerId||aiFeedbackPending||!['helpful','unhelpful'].includes(rating))return;
+ const answerId=lastAIAnswerId;
+ aiFeedbackPending=true;
+ $('aiFeedbackYes').disabled=true;$('aiFeedbackNo').disabled=true;
+ $('aiFeedbackStatus').hidden=false;$('aiFeedbackStatus').textContent='Saving feedback…';
+ try{
+   const res=await fetch('/help/api/ai/feedback',{
+     method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({answerId,rating})
+   });
+   const data=await res.json();
+   if(!res.ok)throw Error(data.error||'Could not save feedback.');
+   $('aiFeedbackActions').hidden=true;
+   $('aiFeedbackStatus').textContent='Thanks! Your feedback helps us improve our guides.';
+ }catch(err){
+   $('aiFeedbackStatus').textContent=err.message||'Could not save feedback. Please try again.';
+   $('aiFeedbackYes').disabled=false;$('aiFeedbackNo').disabled=false;
+ }finally{aiFeedbackPending=false}
+}
+
 function openSupport(){lastFocus=document.activeElement;$('supportOverlay').hidden=false;$('formStage').hidden=false;$('previewStage').hidden=true;$('supportForm').reset();$('custIssue').value=current?.id||'other';$('custName').focus();document.body.style.overflow='hidden';loadCaptcha()}
 function closeSupport(){$('supportOverlay').hidden=true;document.body.style.overflow='';lastFocus?.focus()}
 function currentRequest(){const form=$('supportForm');const f=new FormData(form);const g=getGuide(f.get('issue'));return `Name: ${f.get('name')}\nEmail: ${f.get('email')}\nBusiness: ${f.get('business')}\nIssue: ${g?.title||'Something else'}\n\nWhat happened:\n${f.get('details')}`}
-$('helpSearch').addEventListener('input',renderList);$('helpSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){const matches=document.querySelector('[data-guide]');if(matches){e.preventDefault();openGuide(matches.dataset.guide)}}});$('clearSearch').onclick=()=>{$('helpSearch').value='';renderList();$('helpSearch').focus()};document.addEventListener('click',e=>{const btn=e.target.closest('[data-guide]');if(btn)openGuide(btn.dataset.guide)});$('allHelp').onclick=()=>goHome();$('prevStep').onclick=()=>{stepIndex=Math.max(0,stepIndex-1);renderStep()};$('nextStep').onclick=nextStep;
+async function askAI(e){
+  if(aiBusy){e.preventDefault();return;}
+  e.preventDefault();
+  const question=$('helpSearch').value.trim();
+  lastAIQuestion=question;
+  resetAIEnhancements();
+  const panel=$('aiAnswerPanel'),answer=$('aiAnswerText'),submit=$('askAI');
+  panel.hidden=false;
+  answer.classList.remove('ai-error');
+  $('aiSignInHint').hidden=true;
+  $('aiAnswerHeading').textContent='Suggested next steps';
+  $('aiAnswerDisclosure').textContent='AI-generated guidance based on general Help Center material. The assistant cannot view your account or make changes.';
+  if(question.length<3){
+    answer.textContent='Please describe what you need help with in at least a few words.';
+    answer.classList.add('ai-error');
+    $('helpSearch').focus();
+    return;
+  }
+  answer.textContent='Finding guidance for your question…';
+  aiBusy=true;
+  submit.disabled=true;
+  submit.setAttribute('aria-busy','true');
+  try{
+    const res=await fetch('/help/api/ai/ask',{
+      method:'POST',
+      credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question,consent:true})
+    });
+    const data=await res.json();
+    if(!res.ok){
+      $('aiSignInHint').hidden=res.status!==401;
+      throw Error(data.error||'AI guidance is unavailable right now.');
+    }
+    if(typeof data.answer!=='string'||!data.answer.trim())throw Error('No guidance was returned. Please contact support.');
+    answer.textContent=data.answer.trim();
+    if(typeof data.disclosure==='string')$('aiAnswerDisclosure').textContent=data.disclosure;
+    showAIEnhancements(question,data.answerId);
+  }catch(err){
+    answer.classList.add('ai-error');
+    answer.textContent=err.message||'Unable to get an AI response right now. You can still browse guides or contact our team.';
+  }finally{
+    aiBusy=false;
+    submit.disabled=false;
+    submit.removeAttribute('aria-busy');
+  }
+}
+$('helpSearch').addEventListener('input',renderList);
+$('aiAskForm').addEventListener('submit',askAI);
+$('clearSearch').onclick=()=>{$('helpSearch').value='';renderList();$('helpSearch').focus()};
+$('aiAnswerClose').onclick=()=>{$('aiAnswerPanel').hidden=true};
+$('aiAnswerAgain').onclick=()=>{$('aiAnswerPanel').hidden=true;$('helpSearch').focus()};
+$('aiFeedbackYes').onclick=()=>sendAIFeedback('helpful');
+$('aiFeedbackNo').onclick=()=>sendAIFeedback('unhelpful');
+$('aiAnswerSupport').onclick=()=>{
+  // The user reviews and explicitly sends this ticket; it is never sent automatically.
+  const question=lastAIQuestion||$('helpSearch').value.trim();
+  const guide=lastAIRecommended[0]||recommendAIGuides(question)[0];
+  openSupport();
+  $('custIssue').value=guide?.id||'other';
+  if(question)$('custDetails').value=('I tried the TeleDelo AI Help Center and still need help.\n\nMy question: '+question).slice(0,1800);
+};document.addEventListener('click',e=>{const btn=e.target.closest('[data-guide]');if(btn)openGuide(btn.dataset.guide)});$('allHelp').onclick=()=>goHome();$('prevStep').onclick=()=>{stepIndex=Math.max(0,stepIndex-1);renderStep()};$('nextStep').onclick=nextStep;
 $('guideSupport').onclick=openSupport;$('homeSupport').onclick=openSupport;$('emptySupport').onclick=openSupport;$('closeSupport').onclick=closeSupport;$('cancelSupport').onclick=closeSupport;$('supportOverlay').addEventListener('click',e=>{if(e.target===$('supportOverlay'))closeSupport()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('supportOverlay').hidden)closeSupport()});
 $('custIssue').innerHTML=guides.map(g=>`<option value="${g.id}">${g.title}</option>`).join('')+'<option value="other">Something else</option>';
 

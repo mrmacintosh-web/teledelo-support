@@ -5,7 +5,7 @@ import {DatabaseSync} from 'node:sqlite';
 import worker from '../src/worker.mjs';
 import {normalizeTicket,escapeHtml,randomToken} from '../src/utils.mjs';
 
-function makeDB(){const db=new DatabaseSync(':memory:');db.exec(readFileSync(new URL('../migrations/0001_tickets.sql',import.meta.url),'utf8'));return {
+function makeDB(){const db=new DatabaseSync(':memory:');db.exec(readFileSync(new URL('../migrations/0001_tickets.sql',import.meta.url),'utf8'));db.exec(readFileSync(new URL('../migrations/0002_ai_answer_feedback.sql',import.meta.url),'utf8'));return {
  prepare(sql){return {bind(...args){const stmt=db.prepare(sql);return {first:async()=>stmt.get(...args)||null,all:async()=>({results:stmt.all(...args)}),run:async()=>({meta:{changes:stmt.run(...args).changes}})}}}},
  async batch(queries){db.exec('BEGIN');try{const r=[];for(const q of queries)r.push(await q.run());db.exec('COMMIT');return r}catch(e){db.exec('ROLLBACK');throw e}},
  connection:db};}
@@ -45,6 +45,26 @@ test('public flow authenticates by email, isolates tickets, and blocks staff acc
   const ck=exchange.headers.get('set-cookie').split(';')[0];assert.ok(ck.startsWith('td_support_session='));
   const secondExchange=await worker.fetch(req('/help/api/auth/exchange','POST',{token:u.searchParams.get('auth')}),x);assert.equal(secondExchange.status,401);
   const sessionHeaders={'cookie':ck};
+  // A real staging AI beta requires the same verified customer session,
+  // plus exact inclusion in the configured staff tester allowlist.
+  x.ENVIRONMENT='staging';x.SUPPORT_AUTH_MODE='staging';x.SUPPORT_AI_ENABLED='true';
+  x.STAFF_EMAILS='staff@example.test,alice@example.com';
+  x.AI={async run(){return {choices:[{message:{content:'Check Business phone in your dashboard. Then make a test call.'}}]}}};
+  const aiReq={question:'Why are my calls not coming through?',consent:true};
+  const noAIAuth=await worker.fetch(req('/help/api/ai/ask','POST',aiReq),x);
+  assert.equal(noAIAuth.status,401);
+  const aiReply=await worker.fetch(req('/help/api/ai/ask','POST',aiReq,sessionHeaders),x);
+  assert.equal(aiReply.status,200);
+  const aiAnswer=await aiReply.json();
+  assert.match(aiAnswer.answer,/Business phone/);
+  assert.match(aiAnswer.answerId,/^[a-f0-9-]{36}$/);
+  const wrongOrigin=await worker.fetch(req('/help/api/ai/feedback','POST',{answerId:aiAnswer.answerId,rating:'helpful'},{...sessionHeaders,origin:'https://evil.example'}),x);
+  assert.equal(wrongOrigin.status,403);
+  const vote=await worker.fetch(req('/help/api/ai/feedback','POST',{answerId:aiAnswer.answerId,rating:'helpful'},sessionHeaders),x);
+  assert.equal(vote.status,200);
+  const duplicate=await worker.fetch(req('/help/api/ai/feedback','POST',{answerId:aiAnswer.answerId,rating:'unhelpful'},sessionHeaders),x);
+  assert.equal(duplicate.status,409);
+  assert.equal(x.DB.connection.prepare('SELECT rating FROM ai_answer_feedback WHERE id=?').get(aiAnswer.answerId).rating,'helpful');
   const tickets=await (await worker.fetch(req('/help/api/tickets','GET',null,sessionHeaders),x)).json();assert.equal(tickets.tickets.length,1);
   const reply=await worker.fetch(req(`/help/api/tickets/${reference}/reply`,'POST',{message:'I tested another phone.'},sessionHeaders),x,context);assert.equal(reply.status,200);
   assert.equal(backgroundJobs.length,1,'a customer reply should schedule its staff notification');

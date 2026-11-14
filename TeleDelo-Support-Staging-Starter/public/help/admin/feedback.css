@@ -1,0 +1,16 @@
+/* Compact staff-only AI feedback metrics, aligned with the support inbox. */
+.support-ui .ai-stats-panel{margin-bottom:23px;padding:24px 26px}
+.support-ui .ai-stats-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.support-ui .ai-stats-heading h2{font-size:25px;margin:0 0 3px}
+.support-ui .ai-stats-heading .muted{margin:0;font-size:12px;line-height:1.5}
+.support-ui .ai-stats-period{border:1px solid #e2e7e7;background:#f8faf9;color:#647482;border-radius:9px;padding:7px 10px;font-size:11px;font-weight:700;white-space:nowrap}
+.support-ui .ai-stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.support-ui .ai-metric{border:1px solid #e8ebea;background:#f9faf9;border-radius:13px;padding:18px 17px;min-width:0}
+.support-ui .ai-metric-label{display:block;font-size:12px;color:#506170;font-weight:700;margin-bottom:9px}
+.support-ui .ai-metric-value{font:500 35px/1.15 var(--td-serif);letter-spacing:-.04em;color:#142435;display:block;margin-bottom:8px}
+.support-ui .ai-metric small{font-size:11px;color:#7a8791;display:block;line-height:1.45}
+.support-ui .ai-stats-message{margin:0;color:#657481;font-size:13px}
+.support-ui .ai-stats-message.error{color:#8d4943}
+.support-ui .ai-stats-footnote{border-top:1px solid #eef0ef;margin:17px 0 0;padding-top:12px;color:#74828c;font-size:11px;line-height:1.55}
+@media(max-width:860px){.support-ui .ai-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.support-ui .ai-stats-panel{padding:19px}.support-ui .ai-stats-heading{flex-direction:column}.support-ui .ai-stats-grid{gap:8px}.support-ui .ai-metric{padding:13px}.support-ui .ai-metric-value{font-size:30px}}

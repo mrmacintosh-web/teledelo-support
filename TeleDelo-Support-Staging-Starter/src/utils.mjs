@@ -1,10 +1,12 @@
 export const statuses = ['open','in_progress','waiting_customer','resolved'];
 export const issues = ['calls','messages','business','receptionist','billing','login','hours','cancel','layout','payment','other'];
 export function cleanEmail(v){return String(v||'').trim().toLowerCase()}
-// On the public staging hostname, only approved staff test addresses can submit or sign in.
+// Separate ordinary staging testers from staff. STAFF_EMAILS continues to
+// control staff dashboard access; STAGING_TEST_EMAILS never grants staff privileges.
 export function stagingEmailAllowed(env,email){
   if(env.ENVIRONMENT!=='staging')return true;
-  const approved=String(env.STAFF_EMAILS||'').split(',').map(cleanEmail).filter(validEmail);
+  const approved=[env.STAFF_EMAILS,env.STAGING_TEST_EMAILS]
+    .flatMap(v=>String(v||'').split(',')).map(cleanEmail).filter(validEmail);
   return approved.includes(cleanEmail(email));
 }
 export function validEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)&&v.length<=180}
