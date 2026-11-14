@@ -1,4 +1,4 @@
-import {cleanEmail, sha, responseJson} from './utils.mjs';
+import {cleanEmail, sha, responseJson, stagingEmailAllowed} from './utils.mjs';
 import {supportAIEnabled,validateAISupportQuestion,buildSupportAIMessages} from './support-ai-policy.mjs';
 import {resolveSubscriberFromBackend} from './subscriber-entitlements.mjs';
 import {SUPPORT_GUIDANCE} from './support-knowledge.mjs';
@@ -12,8 +12,7 @@ async function verifiedAIUser(req,env,stagingEmail) {
   if (env.SUPPORT_AUTH_MODE === 'staging' && env.ENVIRONMENT === 'staging') {
     const email=cleanEmail(stagingEmail);
     if (!email) return {ok:false,status:401,error:'For this staging test, sign in through My Support Requests first.'};
-    const allowed=String(env.STAFF_EMAILS||'').split(',').map(cleanEmail).filter(Boolean);
-    if (!allowed.includes(email)) return {ok:false,status:403,error:'AI staging access is limited to approved testers.'};
+    if (!stagingEmailAllowed(env,email)) return {ok:false,status:403,error:'AI staging access is limited to approved testers.'};
     verifiedUserId='staging:'+email;
   } else {
     const access=await resolveSubscriberFromBackend(req,env);
