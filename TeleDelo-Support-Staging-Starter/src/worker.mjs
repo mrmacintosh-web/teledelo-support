@@ -2,6 +2,7 @@ import {cleanEmail,validEmail,trimmed,normalizeTicket,randomToken,sha,cookiePars
 import {buildEmail,sendMail} from './email.mjs';
 import {shouldDispatchNotifications} from './notification-trigger.mjs';
 import {answerSupportQuestion,submitSupportAIFeedback} from './support-ai-handler.mjs';
+import {getAIFeedbackSummary} from './ai-feedback-summary.mjs';
 const now=()=>Math.floor(Date.now()/1000);
 const e=(msg,status=400)=>responseJson({error:msg},status);
 const ok=(data)=>responseJson(data);
@@ -24,21 +25,8 @@ async function customerReply(req,email,ref,env){const row=await env.DB.prepare('
 function base64UrlDecode(str){const s=str.replace(/-/g,'+').replace(/_/g,'/');const bytes=atob(s+'='.repeat((4-s.length%4)%4));return Uint8Array.from(bytes,x=>x.charCodeAt(0))}
 async function staff(req,env){if(!env.ACCESS_TEAM_DOMAIN?.endsWith('.cloudflareaccess.com')||!env.ACCESS_AUD||!env.STAFF_EMAILS)return null;const token=req.headers.get('Cf-Access-Jwt-Assertion');if(!token)return null;try{const parts=token.split('.');if(parts.length!==3)return null;const h=JSON.parse(new TextDecoder().decode(base64UrlDecode(parts[0]))),p=JSON.parse(new TextDecoder().decode(base64UrlDecode(parts[1])));if(h.alg!=='RS256'||!h.kid)return null;const t=now();if(p.iss!==`https://${env.ACCESS_TEAM_DOMAIN}`||!Array.isArray(p.aud)||!p.aud.includes(env.ACCESS_AUD)||p.exp<=t||p.nbf>t)return null;const cert=await fetch(`https://${env.ACCESS_TEAM_DOMAIN}/cdn-cgi/access/certs`);if(!cert.ok)return null;const jwks=await cert.json();const jwk=jwks.keys?.find(k=>k.kid===h.kid&&k.kty==='RSA');if(!jwk)return null;const key=await crypto.subtle.importKey('jwk',jwk,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['verify']);const valid=await crypto.subtle.verify('RSASSA-PKCS1-v1_5',key,base64UrlDecode(parts[2]),new TextEncoder().encode(parts[0]+'.'+parts[1]));if(!valid)return null;const email=cleanEmail(p.email);const allowed=env.STAFF_EMAILS.split(',').map(cleanEmail);return validEmail(email)&&allowed.includes(email)?email:null}catch(err){console.error('access_validation_failed',err);return null}}
 async function staffAIFeedback(env){
-  // Summarize the feedback that has been retained in D1 (30 days).
-  // No raw identifiers or customer questions are returned to staff UI.
-  try{
-    const r=await env.DB.prepare(
-      "SELECT COUNT(*) AS total, " +
-      "COALESCE(SUM(CASE WHEN rating='helpful' THEN 1 ELSE 0 END),0) AS helpful, " +
-      "COALESCE(SUM(CASE WHEN rating='unhelpful' THEN 1 ELSE 0 END),0) AS unhelpful, " +
-      "COUNT(DISTINCT user_key_hash) AS unique_raters " +
-      "FROM ai_answer_feedback WHERE rating IS NOT NULL AND rated_at>=?"
-    ).bind(now()-30*86400).first();
-    const total=Number(r?.total||0), helpful=Number(r?.helpful||0), unhelpful=Number(r?.unhelpful||0);
-    return ok({periodDays:30,total,helpful,unhelpful,
-      uniqueRaters:Number(r?.unique_raters||0),
-      helpfulPercent:total?Math.round(100*helpful/total):null});
-  }catch(err){
+  try{return ok(await getAIFeedbackSummary(env))}
+  catch(err){
     console.error('staff_ai_feedback_unavailable',err?.message||'D1 not configured');
     return e('AI feedback is unavailable. Check the staging D1 migration.',503);
   }
