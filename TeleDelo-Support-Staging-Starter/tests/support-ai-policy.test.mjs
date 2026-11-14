@@ -8,6 +8,7 @@ test('AI stays off unless subscriber auth, explicit enable flag, and binding exi
  assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'subscriber'}),true);
  assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'false',SUPPORT_AUTH_MODE:'subscriber'}),false);
  assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'staging',STAFF_EMAILS:'staff@example.com'}),true);
+ assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'staging',STAGING_TEST_EMAILS:'angel@example.com'}),true);
  assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'production',STAFF_EMAILS:'staff@example.com'}),false);
  assert.equal(supportAIEnabled({...shared,SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'staging',ENVIRONMENT:'staging',STAFF_EMAILS:''}),false);
  assert.equal(supportAIEnabled({SUPPORT_AI_ENABLED:'true',SUPPORT_AUTH_MODE:'subscriber'}),false);
