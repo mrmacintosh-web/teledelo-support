@@ -99,7 +99,7 @@ function showAIEnhancements(question,answerId){
    button.append(title,desc);$('aiRelatedLinks').append(button);
  }
  $('aiRelatedGuides').hidden=lastAIRecommended.length===0;
- lastAIAnswerId=typeof answerId==='string'&&/^[-a-f0-9]{36}$/i.test(answerId)?answerId:null;
+ lastAIAnswerId=typeof answerId==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(answerId)?answerId:null;
  $('aiFeedback').hidden=!lastAIAnswerId;
 }
 async function sendAIFeedback(rating){
