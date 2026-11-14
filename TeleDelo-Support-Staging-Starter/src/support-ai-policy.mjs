@@ -7,7 +7,8 @@ export function supportAIEnabled(env) {
   // staging build with staff-approved test email addresses.
   if (env.SUPPORT_AUTH_MODE === 'subscriber') return true;
   if (env.SUPPORT_AUTH_MODE === 'staging') {
-    return env.ENVIRONMENT === 'staging' && Boolean(env.STAFF_EMAILS?.trim());
+    return env.ENVIRONMENT === 'staging' &&
+      Boolean(String(env.STAFF_EMAILS||'').trim()||String(env.STAGING_TEST_EMAILS||'').trim());
   }
   return false;
 }
