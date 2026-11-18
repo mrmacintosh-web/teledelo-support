@@ -52,6 +52,9 @@ if(path==='/privacy-request/api/verify'){
   return req.method==='POST'?verifyPrivacyMailbox(req,env):e('Method not allowed',405);
 }
 if(['GET','HEAD'].includes(req.method)){
+  if(path==='/'&&env.ENVIRONMENT==='staging'){
+    return new Response(null,{status:302,headers:{Location:'/help/','Cache-Control':'no-store'}});
+  }
   if(['/waitlist','/demo','/calculator','/privacy-request','/privacy-request/verify'].includes(path)){
     const file=path==='/privacy-request/verify'?'privacy-verify':path.slice(1);
     return env.ASSETS.fetch(new Request(new URL('/intake-pages/'+file,u),req));

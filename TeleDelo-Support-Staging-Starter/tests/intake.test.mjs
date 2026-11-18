@@ -223,6 +223,16 @@ test('the shared Worker stores, deduplicates and notifies all three intakes on l
   });
 });
 
+test('staging hostname root opens the Help Center for GET and HEAD', async () => {
+  for (const method of ['GET', 'HEAD']) {
+    const response = await worker.fetch(new Request(direct + '/', { method }), { ENVIRONMENT: 'staging' });
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get('location'), '/help/');
+  }
+  const production = await worker.fetch(new Request(direct + '/'), { ENVIRONMENT: 'production' });
+  assert.equal(production.status, 404);
+});
+
 test('public plan summaries and calculator data agree with the marketing catalog', () => {
   const catalog = JSON.parse(readFileSync(new URL('../src/marketing-plans.json', import.meta.url)));
   const page = name => readFileSync(new URL('../public/intake-pages/' + name + '.html', import.meta.url), 'utf8');
