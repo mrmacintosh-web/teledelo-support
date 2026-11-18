@@ -115,13 +115,14 @@ async function setupForm() {
       }
       if (kind === 'waitlist') form.querySelector('.consent').hidden = false;
     }
-    if (config.testMode) {
+    if (config.testMode && config.ready) {
       const note = document.createElement('p');
       note.className = 'preview-banner';
       note.textContent = 'Testing environment. Use approved test addresses and fictional details.';
       form.before(note);
     }
     if (!config.ready || !config.turnstileSiteKey) {
+      formError.classList.add('availability-note');
       showError('This form is temporarily unavailable.');
       return;
     }

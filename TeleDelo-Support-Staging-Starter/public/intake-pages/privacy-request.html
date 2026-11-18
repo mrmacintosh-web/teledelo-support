@@ -12,21 +12,45 @@
 <link rel="stylesheet" href="/intake-assets/pricing.css">
 <link rel="stylesheet" href="/intake-assets/privacy-request.css">
 <link rel="stylesheet" href="/intake-assets/intake.css">
+<link rel="stylesheet" href="/intake-assets/intake-brand.css">
 
 </head>
-<body>
-<a class="privacy-skip" href="#main">Skip to content</a>
-<header class="topbar"><div class="wrap">
-  <a class="wordmark" href="/">TeleDelo</a>
-  <nav class="site-links" aria-label="Primary navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/login">Log in</a>
-  <a class="btn primary" href="/waitlist">Join the Waitlist</a></nav>
-</div></header>
+<body class="site-intake">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="intake-header">
+  <div class="wrap intake-nav">
+    <a class="intake-wordmark" href="/" aria-label="TeleDelo home">TeleDelo</a>
+    <nav class="intake-nav-links" aria-label="Primary navigation">
+      <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo">Demo</a>
+      <a href="/help">Help Center</a>
+    </nav>
+    <div class="intake-nav-actions">
+      <a href="/login?next=/teledelo-prototype.html" class="btn ghost" data-main-site>Log in</a>
+      <a href="/waitlist" class="btn primary">Join the Waitlist</a>
+    </div>
+    <details class="intake-menu">
+      <summary>Menu <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></summary>
+      <nav class="intake-menu-links" aria-label="Mobile navigation">
+        <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo">Demo</a>
+      <a href="/help">Help Center</a>
+      <a href="/login?next=/teledelo-prototype.html" data-main-site>Log in</a>
+      <a href="/waitlist">Join the Waitlist</a>
+      </nav>
+    </details>
+  </div>
+</header>
 
-<main id="main" class="wrap privacy-layout" tabindex="-1">
-  <header class="privacy-intro">
+<main id="main" class="wrap intake-layout" tabindex="-1">
+  <header class="intake-intro">
+    <p class="eyebrow">Privacy requests</p>
     <h1>Your privacy matters.</h1>
     <p class="lead">Submit a request about the personal information TeleDelo holds about you.</p>
-    <p class="privacy-note">We’ll ask you to verify your email address. Our privacy team will confirm your identity before disclosing, correcting, or deleting personal information.</p><p><a data-policy-link hidden>Read our Privacy Policy</a></p>
+    <p class="intake-note">We’ll ask you to verify your email address. Our privacy team will confirm your identity before disclosing, correcting, or deleting personal information.</p>
+    <p><a data-policy-link hidden>Read our Privacy Policy</a></p>
   </header>
   <section class="form-card privacy-card" aria-labelledby="form-heading">
   <h2 id="form-heading">Privacy request</h2>
@@ -67,10 +91,24 @@
 </section>
 
 </main>
-<footer class="site-footer"><div class="wrap">
-  <p>TeleDelo · Your phone, answered.</p>
-  <nav class="site-links" aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/waitlist">Join the Waitlist</a><a href="/privacy-request" aria-current="page">Privacy requests</a></nav>
-</div></footer>
+
+<footer class="intake-footer">
+  <div class="wrap intake-footer-inner">
+    <div>
+      <a class="intake-wordmark" href="/" aria-label="TeleDelo home">TeleDelo</a>
+      <p>Your phone, answered.</p>
+    </div>
+    <nav class="intake-footer-links" aria-label="Footer navigation">
+      <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo">Demo</a>
+      <a href="/help">Help Center</a>
+      <a href="/waitlist">Join the Waitlist</a>
+      <a href="/privacy-request" aria-current="page">Privacy requests</a>
+    </nav>
+  </div>
+</footer>
+<script src="/intake-assets/intake-navigation.js" defer></script>
 
 <script src="/intake-assets/forms.js" defer></script>
 </body>

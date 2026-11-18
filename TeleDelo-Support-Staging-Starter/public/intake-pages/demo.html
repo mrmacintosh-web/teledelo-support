@@ -10,27 +10,59 @@
 <link rel="stylesheet" href="/intake-assets/marketing.css">
 <link rel="stylesheet" href="/intake-assets/pricing.css">
 <link rel="stylesheet" href="/intake-assets/intake.css">
+<link rel="stylesheet" href="/intake-assets/intake-brand.css">
 </head>
-<body>
+<body class="site-intake">
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="topbar"><div class="wrap">
-  <a class="wordmark" href="/">TeleDelo</a>
-  <nav class="site-links" aria-label="Primary navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo" aria-current="page">Demo</a><a href="/help">Help</a><a href="/login">Log in</a>
-  <a class="btn primary" href="/waitlist">Join the Waitlist</a></nav>
-</div></header>
-<main id="main" class="wrap waitlist-layout">
-  <div class="waitlist-intro">
+<header class="intake-header">
+  <div class="wrap intake-nav">
+    <a class="intake-wordmark" href="/" aria-label="TeleDelo home">TeleDelo</a>
+    <nav class="intake-nav-links" aria-label="Primary navigation">
+      <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo" aria-current="page">Demo</a>
+      <a href="/help">Help Center</a>
+    </nav>
+    <div class="intake-nav-actions">
+      <a href="/login?next=/teledelo-prototype.html" class="btn ghost" data-main-site>Log in</a>
+      <a href="/waitlist" class="btn primary">Join the Waitlist</a>
+    </div>
+    <details class="intake-menu">
+      <summary>Menu <svg aria-hidden="true" width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></summary>
+      <nav class="intake-menu-links" aria-label="Mobile navigation">
+        <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo" aria-current="page">Demo</a>
+      <a href="/help">Help Center</a>
+      <a href="/login?next=/teledelo-prototype.html" data-main-site>Log in</a>
+      <a href="/waitlist">Join the Waitlist</a>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<main id="main" class="wrap intake-layout">
+  <div class="intake-intro">
     <p class="eyebrow">TeleDelo demo</p>
     <h1>See how TeleDelo handles a call.</h1>
     <p class="lead">See a sample call from the first hello through the follow-up your team can review.</p>
     <div class="demo-actions">
       <a class="btn primary" href="/waitlist">Join the Waitlist</a>
-      <a class="btn" href="/?sample=1#callDemo">Watch the sample call</a>
+      <a class="btn secondary" href="#sample-call">Read a sample call</a>
     </div>
-    <section class="demo-example" aria-labelledby="demo-heading">
-    <h2 id="demo-heading">A call to a local business</h2>
-    <p>A customer calls for help. The sample shows how TeleDelo can answer routine questions, collect the details and hand the call to the team when needed.</p>
-    <p>The demo uses fictional business and caller information.</p>
+    <section class="call-example" id="sample-call" aria-labelledby="demo-heading">
+      <header class="call-example-header">
+        <span class="call-example-avatar" aria-hidden="true">MP</span>
+        <div>
+          <h2 id="demo-heading">A call to Apex Mechanical</h2>
+          <p>Fictional caller and business</p>
+        </div>
+      </header>
+      <div class="call-example-dialogue">
+        <p><strong>Caller</strong> Can I speak with someone in the shop right now?</p>
+        <p><strong>TeleDelo</strong> Absolutely. Transferring you over right now.</p>
+      </div>
+      <a class="call-example-link" href="/?sample=1#callDemo" data-main-site>Open the interactive homepage demo</a>
     </section>
   </div>
 <section class="form-card" aria-labelledby="form-heading">
@@ -59,10 +91,24 @@
   <noscript><p class="alert">Enable JavaScript to complete the security check and submit this form.</p></noscript>
 </section>
 </main>
-<footer class="site-footer"><div class="wrap">
-  <p>TeleDelo · Your phone, answered.</p>
-  <nav class="site-links" aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo" aria-current="page">Demo</a><a href="/help">Help</a><a href="/waitlist">Join the Waitlist</a><a href="/privacy-request">Privacy requests</a></nav>
-</div></footer>
+
+<footer class="intake-footer">
+  <div class="wrap intake-footer-inner">
+    <div>
+      <a class="intake-wordmark" href="/" aria-label="TeleDelo home">TeleDelo</a>
+      <p>Your phone, answered.</p>
+    </div>
+    <nav class="intake-footer-links" aria-label="Footer navigation">
+      <a href="/pricing" data-main-site>Pricing</a>
+      <a href="/calculator">Savings calculator</a>
+      <a href="/demo" aria-current="page">Demo</a>
+      <a href="/help">Help Center</a>
+      <a href="/waitlist">Join the Waitlist</a>
+      <a href="/privacy-request">Privacy requests</a>
+    </nav>
+  </div>
+</footer>
+<script src="/intake-assets/intake-navigation.js" defer></script>
 <script src="/intake-assets/forms.js" defer></script>
 </body>
 </html>
