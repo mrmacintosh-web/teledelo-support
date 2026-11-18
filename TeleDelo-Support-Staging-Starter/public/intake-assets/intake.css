@@ -1,0 +1,24 @@
+main { min-height: 45vh; }
+form[data-intake] > .btn { margin-block-start: 18px; }
+form[data-intake] .consent + .btn { margin-block-start: 0; }
+.btn:disabled { cursor: default; opacity: .68; }
+.field textarea { display: block; width: 100%; margin-top: 5px; border: 1px solid var(--field-border); border-radius: 10px; padding: 9px 11px; background: white; color: var(--ink); font: 16px/1.5 Inter, system-ui, sans-serif; resize: vertical; }
+.field select { text-overflow: ellipsis; }
+#turnstile { margin-top: 16px; }
+.form-result { border: 1px solid #8299a9; background: #eef2f6; color: var(--ink); border-radius: 12px; padding: 14px 16px; margin-block: 16px 0; overflow-wrap: anywhere; }
+.demo-example { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 28px; }
+.demo-example h2 { font-size: 24px; }
+.demo-example p { color: var(--muted); font-size: 15px; }
+.verify-card { max-width: 600px; margin-inline: auto; }
+.verify-card h1 { font-size: clamp(36px, 7vw, 52px); }
+.intake-staff .form-card { margin-block: 20px; }
+.intake-staff dt { font-weight: 700; overflow-wrap: anywhere; }
+.intake-staff dd { margin: 0 0 12px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.intake-staff .review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 15px; }
+.intake-staff .review-actions .btn { width: auto; }
+.intake-staff button.reference { display: inline-flex; text-align: left; }
+@media (max-width: 380px) {
+  .form-card { padding-inline: 18px; }
+}
+.skip-link { position: absolute; top: 8px; left: 8px; z-index: 2; padding: 8px 12px; background: var(--ivory); transform: translateY(-160%); }
+.skip-link:focus { transform: none; }

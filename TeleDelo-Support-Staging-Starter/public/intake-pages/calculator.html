@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>What Could Your Missed Calls Be Worth? | TeleDelo</title>
+  <meta name="description" content="Explore the potential value of answering missed calls with TeleDelo Lite, TeleDelo or TeleDelo Pro.">
+  <link rel="icon" href="/intake-assets/favicon.svg">
+  <link rel="stylesheet" href="/intake-assets/inter.css">
+  <link rel="stylesheet" href="/intake-assets/pricing.css">
+  <link rel="stylesheet" href="/intake-assets/calculator.css">
+  <script src="/intake-assets/calculator.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/">TeleDelo</a>
+      <nav aria-label="Primary navigation">
+        <a href="/pricing">Pricing</a>
+        <a href="/"><span aria-hidden="true">←</span> Back to website</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="shell">
+    <header class="hero">
+      <p class="eyebrow">Savings calculator</p>
+      <h1>What could your missed calls <span>be worth?</span></h1>
+      <p class="hero-lead">Answer two quick questions to see what answering more calls could mean for your business.</p>
+    </header>
+
+    <noscript><p>Enable JavaScript to calculate an estimate.</p></noscript>
+    <div class="calculator">
+      <section class="input-card" aria-label="Calculator inputs">
+        <fieldset>
+          <legend class="section-title">Choose your plan</legend>
+          <div class="plan-options">
+<!-- plans:start -->
+<div class="plan-option" data-plan="lite">
+  <input type="radio" id="plan-lite" name="plan" value="lite" data-price="69" checked
+    data-calls-hint="Count the calls you miss during your normal business hours." data-profit-hint="" aria-labelledby="plan-lite-name plan-lite-price" aria-describedby="plan-lite-details">
+  <label class="plan-label" for="plan-lite">
+    <span class="plan-title" id="plan-lite-name">TeleDelo Lite</span>
+    <span class="plan-price" id="plan-lite-price">$69 <small>/ month</small></span>
+    <span class="plan-description" id="plan-lite-details">
+      <span class="plan-minutes">250 AI calling minutes per month</span>
+      <span>One business</span>
+      <span>Business-hours answering only</span>
+    </span>
+  </label>
+</div>
+<div class="plan-option" data-plan="teledelo">
+  <input type="radio" id="plan-teledelo" name="plan" value="teledelo" data-price="199" data-overage-cents="29"
+    data-calls-hint="Count missed calls during business hours and after closing." data-profit-hint="" aria-labelledby="plan-teledelo-name plan-teledelo-price" aria-describedby="plan-teledelo-details">
+  <label class="plan-label" for="plan-teledelo">
+    <span class="plan-title" id="plan-teledelo-name">TeleDelo</span>
+    <span class="plan-price" id="plan-teledelo-price">$199 <small>/ month</small></span>
+    <span class="plan-description" id="plan-teledelo-details">
+      <span class="plan-minutes">1,000 AI calling minutes per month</span>
+      <span>One business</span>
+      <span>Business-hours and after-hours answering</span>
+    </span>
+  </label>
+</div>
+<div class="plan-option" data-plan="pro">
+  <input type="radio" id="plan-pro" name="plan" value="pro" data-price="499"
+    data-calls-hint="Enter the combined missed calls across the businesses you’d like to cover." data-profit-hint="Use a reasonable average profit per new customer across the businesses you plan to cover." aria-labelledby="plan-pro-name plan-pro-price" aria-describedby="plan-pro-details">
+  <label class="plan-label" for="plan-pro">
+    <span class="plan-title" id="plan-pro-name">TeleDelo Pro</span>
+    <span class="plan-price" id="plan-pro-price">$499 <small>/ month</small></span>
+    <span class="plan-description" id="plan-pro-details">
+      <span class="plan-minutes">3,000 shared AI calling minutes per month</span>
+      <span>Up to three businesses</span>
+      <span>Business-hours and after-hours answering</span>
+    </span>
+  </label>
+</div>
+<!-- plans:end -->
+          </div>
+        </fieldset>
+
+        <section class="questions" aria-labelledby="questions-title">
+          <div class="question-heading">
+            <h2 id="questions-title" class="section-title">Two quick questions</h2>
+            <button class="reset" id="reset" type="button"><span aria-hidden="true">↺</span> Reset</button>
+          </div>
+          <p class="hint example-hint">Replace the example numbers with your own.</p>
+          <div class="field">
+            <label for="calls">How many calls do you miss each week?</label>
+            <div class="number-field has-suffix">
+              <input id="calls" type="number" inputmode="decimal" min="0" max="10000" step="any" value="8" required aria-describedby="calls-hint calls-error">
+              <span class="suffix" aria-hidden="true">calls / week</span>
+            </div>
+            <p class="hint" id="calls-hint"></p>
+            <p class="input-error" id="calls-error" hidden></p>
+          </div>
+          <div class="field">
+            <label for="profit">How much profit do you typically make from one new customer?</label>
+            <div class="number-field has-prefix">
+              <span class="prefix" aria-hidden="true">$</span>
+              <input id="profit" type="number" inputmode="decimal" min="0" max="10000000" step="0.01" value="150" required aria-describedby="profit-units profit-hint profit-error">
+            </div>
+            <span class="sr-only" id="profit-units">In US dollars.</span>
+            <p class="hint" id="profit-hint">Think about what you keep after the direct costs of the job.<span id="profit-plan-hint"></span></p>
+            <p class="input-error" id="profit-error" hidden></p>
+          </div>
+        </section>
+
+        <details class="assumptions" id="assumptions">
+          <summary>Adjust the estimate</summary>
+          <div class="field">
+            <label for="conversion">Missed calls that could become paying customers</label>
+            <select id="conversion" aria-describedby="conversion-hint">
+              <option value="20">Cautious · 1 in 20</option>
+              <option value="10" selected>Typical example · 1 in 10</option>
+              <option value="5">Optimistic · 1 in 5</option>
+            </select>
+            <p class="hint" id="conversion-hint">These are hypothetical conversion rates. Actual results vary.</p>
+          </div>
+          <div class="field" id="overage-details" hidden>
+            <label for="extra">Additional AI calling minutes per month</label>
+            <input id="extra" type="number" inputmode="numeric" min="0" max="1000000" step="1" value="0" disabled aria-describedby="extra-hint extra-error">
+            <p class="hint" id="extra-hint"></p>
+            <p class="input-error" id="extra-error" hidden></p>
+          </div>
+        </details>
+      </section>
+
+      <section class="result" id="estimate" aria-labelledby="estimate-title">
+        <div>
+          <h2 class="eyebrow" id="estimate-title">Your monthly estimate</h2>
+          <p class="result-label">Estimated monthly net value</p>
+          <p class="net" id="net">—</p>
+          <p class="result-explanation" id="result-explanation"></p>
+        </div>
+        <dl class="breakdown">
+          <div><dt>Potential additional paying customers</dt><dd id="customers">—</dd></div>
+          <div><dt>Estimated additional customer profit</dt><dd id="value">—</dd></div>
+          <div><dt>Monthly subscription</dt><dd id="price">—</dd></div>
+          <div id="overage-row" hidden><dt>Additional calling charges</dt><dd id="overage-cost">—</dd></div>
+        </dl>
+        <div class="break-even">
+          <h3>Break-even</h3>
+          <p id="breakeven">Your break-even estimate will appear here.</p>
+        </div>
+        <p class="estimate-note" id="cost-note"></p>
+        <p class="sr-only" id="estimate-status" role="status" aria-atomic="true"></p>
+      </section>
+    </div>
+
+    <section class="waitlist-callout" aria-labelledby="waitlist-title">
+      <div>
+        <h2 id="waitlist-title">Interested in TeleDelo?</h2>
+        <p>Join for availability updates as we prepare to launch.</p>
+      </div>
+      <a class="cta" href="/waitlist?plan=lite" id="resultCta">Join the Waitlist <span class="cta-arrow" aria-hidden="true"></span></a>
+    </section>
+    <p class="fineprint">This scenario uses your selected assumption and averages weekly calls over a month using 52 weeks divided by 12. Included AI minutes are a usage allowance. Results are illustrative and exclude overhead and other operating expenses. Actual results will vary.</p>
+  </main>
+  <footer class="site-footer shell">
+    <span>© 2026 TeleDelo · Your phone, answered.</span>
+    <nav aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/waitlist?plan=lite" id="footerCta">Join the Waitlist</a><a href="/privacy-request">Privacy requests</a></nav>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,257 @@
+:root {
+  --pro-evergreen: #173d35;
+  --pro-dark: #102d28;
+  --pro-champagne: #e6d1a7;
+  --pro-antique: #b99562;
+  --pro-ivory: #fbf5e9;
+}
+
+.cta-arrow {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+}
+
+.cta-arrow::before, .cta-arrow::after {
+  content: "";
+  position: absolute;
+}
+
+.cta-arrow::before {
+  inset: 0 0 auto auto;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+
+.cta-arrow::after {
+  top: 0;
+  right: 0;
+  width: 11px;
+  height: 1px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: right;
+}
+
+html #pricing .plans-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 16px;
+  max-width: 450px;
+  margin-inline: auto;
+}
+
+html #pricing .plan-card {
+  --card-bg: #fffdf8;
+  --card-ink: #142333;
+  --card-muted: #526171;
+  --card-line: #d9d9ce;
+  --card-note: #f4f1e9;
+  --card-accent: #526171;
+  --card-button: #fffdf8;
+  --card-button-hover: #eeeae0;
+  --button-ink: #142333;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(21px, 2.25vw, 32px);
+  border: 1px solid var(--card-line);
+  border-radius: 24px;
+  background: var(--card-bg);
+  color: var(--card-ink);
+  box-shadow: 0 10px 28px #15233412;
+  transition: box-shadow 180ms ease;
+}
+
+html #pricing .plan-card.full {
+  --card-bg: #142333;
+  --card-ink: #ffffff;
+  --card-muted: #ced9e3;
+  --card-line: #34475a;
+  --card-note: #22374a;
+  --card-accent: #b4c7dc;
+  --card-button: #fffdf8;
+  --card-button-hover: #e4edf3;
+}
+
+html #pricing .plan-card.full::before { content: none; }
+
+html #pricing .plan-card.pro {
+  --card-bg: var(--pro-evergreen);
+  --card-ink: var(--pro-ivory);
+  --card-muted: #e6ddc9;
+  --card-line: #9c805b;
+  --card-note: var(--pro-dark);
+  --card-accent: var(--pro-champagne);
+  --card-button: var(--pro-champagne);
+  --card-button-hover: var(--pro-ivory);
+  --button-ink: var(--pro-dark);
+}
+
+html #pricing .plan-head { min-height: 0; margin: 0 0 19px; }
+html #pricing .plan-name {
+  margin: 0 0 8px;
+  color: var(--card-ink);
+  font: 400 clamp(27px, 2.6vw, 37px)/1.06 var(--serif, Georgia, serif);
+  letter-spacing: -.04em;
+}
+
+html #pricing .plan-card .plan-tagline {
+  margin: 0;
+  color: var(--card-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+html #pricing .pro .plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border: 1px solid #a58b61;
+  border-radius: 999px;
+  color: var(--pro-champagne);
+  background: var(--pro-dark);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .05em;
+  margin-top: 9px;
+}
+
+html #pricing .pro .plan-badge::before {
+  content: "";
+  inline-size: 5px;
+  block-size: 5px;
+  background: var(--pro-antique);
+  rotate: 45deg;
+}
+
+html #pricing .price-number {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0 0 18px;
+  color: var(--card-ink);
+}
+
+html #pricing .price-number strong {
+  color: inherit;
+  font: 400 clamp(54px, 5vw, 72px)/1 var(--serif, Georgia, serif);
+  letter-spacing: -.065em;
+}
+
+html #pricing .pro .price-number { color: var(--pro-champagne); }
+html #pricing .plan-card .price-number span {
+  padding: 0;
+  color: var(--card-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+html #pricing .price-list {
+  display: grid;
+  gap: 9px;
+  margin: 0 0 22px;
+  padding: 17px 0 0 16px;
+  border-top: 1px solid var(--card-line);
+  list-style: disc;
+  color: var(--card-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+html #pricing .price-list li { padding-inline-start: 2px; }
+html #pricing .price-list li:first-child { color: var(--card-ink); font-weight: 700; }
+html #pricing .price-list li::marker { color: var(--card-accent); font-size: .8em; }
+
+html #pricing .plan-card .usage-note {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: auto 0 15px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card-note);
+  color: var(--card-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+html #pricing .plan-card .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--card-button-border, var(--card-button));
+  border-radius: 999px;
+  background: var(--card-button);
+  box-shadow: none;
+  color: var(--button-ink);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: none;
+  transition: background-color 180ms ease;
+}
+
+html #pricing .lite .btn { --card-button-border: #a4a9a6; }
+html #pricing .plan-card .btn:hover { background: var(--card-button-hover); }
+html #pricing .plan-card .btn:focus-visible { outline: 2px solid var(--card-ink); outline-offset: 4px; }
+html #pricing .pro .btn:focus-visible { outline-color: var(--pro-champagne); }
+
+html #pricing .pricing-comparison {
+  width: fit-content;
+  max-width: 100%;
+  margin: -13px auto 29px;
+  padding: 7px 14px;
+  border: 1px solid var(--line, #d9dcd5);
+  border-radius: 9px;
+  background: var(--surface, #fffdf9);
+  color: var(--muted, #526171);
+  font-size: 13px;
+  text-align: center;
+}
+
+html #pricing .pricing-comparison strong { color: var(--ink, #142333); }
+
+@media (hover: hover) {
+  html #pricing .plan-card:hover { box-shadow: 0 14px 32px #15233426; }
+}
+
+@media (min-width: 600px) {
+  html #pricing .plans-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 1120px; }
+  html #pricing .plan-head { min-height: 122px; }
+  html #pricing .plan-card .usage-note { min-height: 58px; }
+}
+
+@media (600px <= width < 750px) {
+  html #pricing .plans-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  html #pricing .plan-card { grid-column: span 2; }
+  html #pricing .plan-card.pro { grid-column: 2 / span 2; }
+}
+
+@media (min-width: 750px) {
+  html #pricing .plans-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); }
+  html #pricing .plan-card .usage-note { min-height: 72px; }
+}
+
+@media (min-width: 1000px) {
+  html #pricing .plan-card .usage-note { min-height: 58px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html #pricing .plan-card,
+  html #pricing .plan-card .btn { transition: none; }
+}

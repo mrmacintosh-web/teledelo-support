@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="See an example of how TeleDelo can handle a business call.">
+<title>Sample call · TeleDelo</title>
+<link rel="icon" href="/intake-assets/favicon.svg">
+<link rel="stylesheet" href="/intake-assets/inter.css">
+<link rel="stylesheet" href="/intake-assets/marketing.css">
+<link rel="stylesheet" href="/intake-assets/pricing.css">
+<link rel="stylesheet" href="/intake-assets/intake.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap">
+  <a class="wordmark" href="/">TeleDelo</a>
+  <nav class="site-links" aria-label="Primary navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo" aria-current="page">Demo</a><a href="/help">Help</a><a href="/login">Log in</a>
+  <a class="btn primary" href="/waitlist">Join the Waitlist</a></nav>
+</div></header>
+<main id="main" class="wrap waitlist-layout">
+  <div class="waitlist-intro">
+    <p class="eyebrow">TeleDelo demo</p>
+    <h1>See how TeleDelo handles a call.</h1>
+    <p class="lead">See a sample call from the first hello through the follow-up your team can review.</p>
+    <div class="demo-actions">
+      <a class="btn primary" href="/waitlist">Join the Waitlist</a>
+      <a class="btn" href="/?sample=1#callDemo">Watch the sample call</a>
+    </div>
+    <section class="demo-example" aria-labelledby="demo-heading">
+    <h2 id="demo-heading">A call to a local business</h2>
+    <p>A customer calls for help. The sample shows how TeleDelo can answer routine questions, collect the details and hand the call to the team when needed.</p>
+    <p>The demo uses fictional business and caller information.</p>
+    </section>
+  </div>
+<section class="form-card" aria-labelledby="form-heading">
+  <h2 id="form-heading">Request a demo</h2>
+  <p class="form-intro">Tell us what you’d like to see and we’ll follow up by email.</p>
+  <form data-intake="demo" method="post" action="/demo/api">
+    <p class="alert" id="form-error" role="alert" tabindex="-1" hidden></p>
+    <div hidden><label>Leave this field blank <input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <div class="form-grid">
+      <label class="field field-wide" for="name">Contact name<input id="name" name="name" autocomplete="name" maxlength="100" required></label>
+      <label class="field field-wide" for="business">Business name<input id="business" name="business" autocomplete="organization" maxlength="120" required></label>
+      <label class="field field-wide" for="email">Work email<input id="email" name="email" type="email" autocomplete="email" maxlength="180" required></label>
+      <label class="field field-wide" for="demo_topic">What would you like to see?
+        <select id="demo_topic" name="demo_topic" required><option value="">Choose a topic</option><option>General overview</option><option>Call handling</option><option>After-hours answering</option><option>Multiple businesses</option></select>
+      </label>
+      <label class="field field-wide" for="details">Questions for the demo (optional)
+        <textarea id="details" name="details" rows="3" maxlength="1200" aria-describedby="demo-details-hint"></textarea>
+        <span class="field-hint" id="demo-details-hint">Leave out passwords and other sensitive information.</span>
+      </label>
+    </div>
+    <p id="security-error" class="field-error" role="status" hidden></p>
+    <div id="turnstile"></div>
+    <button type="submit" disabled class="btn primary">Request a demo</button>
+  </form>
+  <div id="form-result" class="form-result" role="status" tabindex="-1" hidden></div>
+  <noscript><p class="alert">Enable JavaScript to complete the security check and submit this form.</p></noscript>
+</section>
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p>TeleDelo · Your phone, answered.</p>
+  <nav class="site-links" aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo" aria-current="page">Demo</a><a href="/help">Help</a><a href="/waitlist">Join the Waitlist</a><a href="/privacy-request">Privacy requests</a></nav>
+</div></footer>
+<script src="/intake-assets/forms.js" defer></script>
+</body>
+</html>

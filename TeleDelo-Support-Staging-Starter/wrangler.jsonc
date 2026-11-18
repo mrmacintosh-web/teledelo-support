@@ -37,6 +37,7 @@
     "ACCESS_TEAM_DOMAIN": "",
     "ACCESS_AUD": "",
     "STAFF_EMAILS": "",
-    "STAFF_NOTIFY_EMAIL": ""
+    "STAFF_NOTIFY_EMAIL": "",
+    "INTAKE_ENABLED": "false"
   }
 }

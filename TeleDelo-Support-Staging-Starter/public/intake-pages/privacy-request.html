@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="description" content="Submit a request about the personal information TeleDelo holds about you.">
+<title>Privacy requests · TeleDelo</title>
+<link rel="icon" href="/intake-assets/favicon.svg">
+<link rel="stylesheet" href="/intake-assets/inter.css">
+<link rel="stylesheet" href="/intake-assets/marketing.css">
+<link rel="stylesheet" href="/intake-assets/pricing.css">
+<link rel="stylesheet" href="/intake-assets/privacy-request.css">
+<link rel="stylesheet" href="/intake-assets/intake.css">
+
+</head>
+<body>
+<a class="privacy-skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap">
+  <a class="wordmark" href="/">TeleDelo</a>
+  <nav class="site-links" aria-label="Primary navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/login">Log in</a>
+  <a class="btn primary" href="/waitlist">Join the Waitlist</a></nav>
+</div></header>
+
+<main id="main" class="wrap privacy-layout" tabindex="-1">
+  <header class="privacy-intro">
+    <h1>Your privacy matters.</h1>
+    <p class="lead">Submit a request about the personal information TeleDelo holds about you.</p>
+    <p class="privacy-note">We’ll ask you to verify your email address. Our privacy team will confirm your identity before disclosing, correcting, or deleting personal information.</p><p><a data-policy-link hidden>Read our Privacy Policy</a></p>
+  </header>
+  <section class="form-card privacy-card" aria-labelledby="form-heading">
+  <h2 id="form-heading">Privacy request</h2>
+
+
+  <form data-intake="privacy-request" method="post" action="/privacy-request/api">
+    <p class="alert" id="form-error" role="alert" tabindex="-1" hidden></p>
+    <div hidden><label>Leave this field blank <input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <div class="form-grid">
+      <div class="field field-wide">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" maxlength="120" autocomplete="name" required value="">
+
+      </div>
+      <div class="field field-wide">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" maxlength="254" autocomplete="email" required value="">
+
+      </div>
+      <div class="field field-wide">
+        <label for="request_type">Request type</label>
+        <select id="request_type" name="request_type" required><option value="">Choose a request type</option><option value="access">Access my information</option><option value="correct">Correct my information</option><option value="delete">Delete my information</option><option value="withdraw">Withdraw optional marketing consent</option><option value="other">Other privacy question</option></select>
+
+      </div>
+      <div class="field field-wide">
+        <label for="details">Additional details <span class="field-optional">(optional)</span></label>
+        <textarea id="details" name="details" rows="4" maxlength="1600" aria-describedby="details-hint"></textarea>
+        <p class="field-hint" id="details-hint">Share only what we need to understand your request. Leave out passwords, identity documents, and other sensitive information.</p>
+
+      </div>
+    </div>
+    <p id="security-error" class="field-error" role="status" hidden></p>
+    <div id="turnstile"></div>
+    <button type="submit" disabled class="btn primary">Submit privacy request</button>
+  </form>
+  <div id="form-result" class="form-result" role="status" tabindex="-1" hidden></div>
+  <noscript><p class="alert">Enable JavaScript to complete the security check and submit this form.</p></noscript>
+</section>
+
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p>TeleDelo · Your phone, answered.</p>
+  <nav class="site-links" aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/waitlist">Join the Waitlist</a><a href="/privacy-request" aria-current="page">Privacy requests</a></nav>
+</div></footer>
+
+<script src="/intake-assets/forms.js" defer></script>
+</body>
+</html>

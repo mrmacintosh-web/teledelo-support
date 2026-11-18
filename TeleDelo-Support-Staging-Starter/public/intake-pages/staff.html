@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Staff request review · TeleDelo</title>
+<link rel="stylesheet" href="/intake-assets/inter.css"><link rel="stylesheet" href="/intake-assets/marketing.css"><link rel="stylesheet" href="/intake-assets/intake.css">
+</head><body>
+<header class="topbar"><div class="wrap"><a class="wordmark" href="/help">TeleDelo</a><span>Authorized staff</span></div></header>
+<main class="wrap standalone intake-staff">
+<h1 id="title">Request review</h1>
+<p id="message" role="status" tabindex="-1"></p>
+<div class="review-actions"><button type="button" class="btn" id="filter" aria-pressed="false">Show closed requests</button></div>
+<section class="form-card" id="inbox" aria-labelledby="inbox-heading">
+<h2 id="inbox-heading">Requests</h2><ul id="requests"></ul>
+<button type="button" class="btn" id="next" hidden>Next page</button>
+</section>
+<section class="form-card" id="case" aria-labelledby="case-heading" hidden>
+<h2 id="case-heading" tabindex="-1"></h2><dl id="details"></dl>
+<div id="review-actions" class="review-actions"></div>
+<h3>Review history</h3><ul id="audit"></ul>
+</section>
+</main>
+<script src="/intake-assets/staff.js" defer></script>
+</body></html>

@@ -1,0 +1,47 @@
+{
+  "lite": {
+    "name": "TeleDelo Lite",
+    "price": 69,
+    "coverage": "Business-hours answering only",
+    "businesses": "One business",
+    "tagline": "Extra help while you’re open.",
+    "features": [
+      "Core call answering and routine requests",
+      "Customer dashboard and caller details",
+      "Human transfers where supported"
+    ],
+    "note": "Calls after closing are outside Lite coverage.",
+    "calculator_calls_hint": "Count the calls you miss during your normal business hours.",
+    "included_minutes": 250
+  },
+  "teledelo": {
+    "name": "TeleDelo",
+    "price": 199,
+    "coverage": "Business-hours and after-hours answering",
+    "businesses": "One business",
+    "tagline": "Your phone, answered. Even after hours.",
+    "features": [
+      "Customer dashboard, caller details and call summaries",
+      "Human transfers and request handling where supported"
+    ],
+    "overage_cents": 29,
+    "calculator_calls_hint": "Count missed calls during business hours and after closing.",
+    "included_minutes": 1000
+  },
+  "pro": {
+    "name": "TeleDelo Pro",
+    "price": 499,
+    "coverage": "Business-hours and after-hours answering",
+    "businesses": "Up to three businesses",
+    "tagline": "One receptionist. Multiple businesses.",
+    "features": [
+      "Standard TeleDelo calling capabilities"
+    ],
+    "note": "All businesses draw from one monthly pool. Multi-business management is planned.",
+    "calculator_calls_hint": "Enter the combined missed calls across the businesses you’d like to cover.",
+    "calculator_profit_hint": "Use a reasonable average profit per new customer across the businesses you plan to cover.",
+    "included_minutes": 3000,
+    "shared_minutes": true,
+    "badge": "Multi-business"
+  }
+}

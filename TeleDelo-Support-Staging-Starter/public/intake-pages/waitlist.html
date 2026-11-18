@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Join the TeleDelo waitlist for updates on availability.">
+<title>Join the Waitlist · TeleDelo</title>
+<link rel="icon" href="/intake-assets/favicon.svg">
+<link rel="stylesheet" href="/intake-assets/inter.css">
+<link rel="stylesheet" href="/intake-assets/marketing.css">
+<link rel="stylesheet" href="/intake-assets/pricing.css">
+<link rel="stylesheet" href="/intake-assets/privacy-request.css">
+<link rel="stylesheet" href="/intake-assets/intake.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap">
+  <a class="wordmark" href="/">TeleDelo</a>
+  <nav class="site-links" aria-label="Primary navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/login">Log in</a>
+  <a class="btn primary" href="/waitlist" aria-current="page">Join the Waitlist</a></nav>
+</div></header>
+
+<main id="main" class="wrap waitlist-layout">
+  <div class="waitlist-intro">
+    <p class="eyebrow">Early access waitlist</p>
+    <h1>Better call answering is on its way.</h1>
+    <p class="lead">Join the TeleDelo waitlist and be among the first to hear when we're ready to welcome new businesses.</p>
+    <p class="waitlist-aside">We're preparing for launch. Joining is free and takes about a minute.</p>
+  </div>
+  <section class="form-card" aria-labelledby="form-heading">
+  <h2 id="form-heading">Join the waitlist</h2>
+  <p class="form-intro">Fields marked optional can be left blank.</p>
+
+  <form data-intake="waitlist" method="post" action="/waitlist/api">
+    <p class="alert" id="form-error" role="alert" tabindex="-1" hidden></p>
+    <div hidden><label>Leave blank <input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <div class="form-grid">
+      <label class="field field-wide" for="name">Contact name
+        <input id="name" name="name" autocomplete="name" maxlength="100" value="" required>
+
+      </label>
+      <label class="field field-wide" for="email">Work email
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" value="" required>
+
+      </label>
+      <label class="field field-wide" for="business">Business name
+        <input id="business" name="business" autocomplete="organization" maxlength="120" value="" required>
+
+      </label>
+      <label class="field" for="location">Business location
+        <input id="location" name="location" autocomplete="address-level2" maxlength="120" required value="">
+
+      </label>
+      <label class="field" for="phone">Phone number (optional)
+        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" value="">
+
+      </label>
+      <label class="field field-wide" for="plan">Interested plan
+        <select id="plan" name="plan" required aria-describedby="plan-summary"><option value="">Select a plan</option><option value="lite" data-summary="$69/month · 250 included minutes">TeleDelo Lite</option><option value="teledelo" data-summary="$199/month · 1,000 included minutes">TeleDelo</option><option value="pro" data-summary="$499/month · 3,000 shared minutes · up to three businesses">TeleDelo Pro</option></select>
+        <span class="field-hint" id="plan-summary" aria-live="polite"></span>
+
+      </label>
+    </div>
+    <div class="consent" hidden>
+      <input type="checkbox" name="consent" id="consent" value="yes" required>
+      <div><label for="consent">I’ve read the <a data-policy-link>privacy policy</a> and agree to be contacted about my waitlist request.</label></div>
+    </div>
+    <p id="security-error" class="field-error" role="status" hidden></p>
+    <div id="turnstile"></div>
+    <button type="submit" disabled class="btn primary">Join the Waitlist</button>
+  </form>
+  <div id="form-result" class="form-result" role="status" tabindex="-1" hidden></div>
+  <noscript><p class="alert">Enable JavaScript to complete the security check and submit this form.</p></noscript>
+</section>
+
+</main>
+<footer class="site-footer"><div class="wrap">
+  <p>TeleDelo · Your phone, answered.</p>
+  <nav class="site-links" aria-label="Footer navigation"><a href="/pricing">Pricing</a><a href="/calculator">Savings calculator</a><a href="/demo">Demo</a><a href="/help">Help</a><a href="/waitlist" aria-current="page">Join the Waitlist</a><a href="/privacy-request">Privacy requests</a></nav>
+</div></footer>
+
+<script src="/intake-assets/forms.js" defer></script>
+</body>
+</html>

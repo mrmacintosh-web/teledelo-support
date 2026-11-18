@@ -1,0 +1,24 @@
+{
+  "functions": {
+    "api/support-edge.mjs": { "maxDuration": 10 }
+  },
+  "rewrites": [
+    { "source": "/help", "destination": "/api/support-edge?td_path=/help" },
+    { "source": "/help/requests", "destination": "/api/support-edge?td_path=/help/requests" },
+    { "source": "/help/api/:path*", "destination": "/api/support-edge?td_path=/help/api/:path*" },
+    { "source": "/help/assets/:file", "destination": "/api/support-edge?td_path=/help/assets/:file" },
+    { "source": "/intake-assets/:file", "destination": "/api/support-edge?td_path=/intake-assets/:file" },
+    { "source": "/calculator", "destination": "/api/support-edge?td_path=/calculator" },
+    { "source": "/waitlist", "destination": "/api/support-edge?td_path=/waitlist" },
+    { "source": "/waitlist/api", "destination": "/api/support-edge?td_path=/waitlist/api" },
+    { "source": "/waitlist/api/config", "destination": "/api/support-edge?td_path=/waitlist/api/config" },
+    { "source": "/demo", "destination": "/api/support-edge?td_path=/demo" },
+    { "source": "/demo/api", "destination": "/api/support-edge?td_path=/demo/api" },
+    { "source": "/demo/api/config", "destination": "/api/support-edge?td_path=/demo/api/config" },
+    { "source": "/privacy-request", "destination": "/api/support-edge?td_path=/privacy-request" },
+    { "source": "/privacy-request/verify", "destination": "/api/support-edge?td_path=/privacy-request/verify" },
+    { "source": "/privacy-request/api", "destination": "/api/support-edge?td_path=/privacy-request/api" },
+    { "source": "/privacy-request/api/config", "destination": "/api/support-edge?td_path=/privacy-request/api/config" },
+    { "source": "/privacy-request/api/verify", "destination": "/api/support-edge?td_path=/privacy-request/api/verify" }
+  ]
+}
