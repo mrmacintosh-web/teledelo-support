@@ -1,0 +1,22 @@
+# Fictional fixture for Wrangler --local only. The two Turnstile keys are Cloudflare's public test keys.
+ENVIRONMENT=local
+PUBLIC_ORIGIN=https://local.teledelo.example
+FROM_EMAIL=notifications@example.test
+REPLY_TO_EMAIL=support@example.test
+STAFF_NOTIFY_EMAIL=support@example.test
+STAGING_TEST_EMAILS=reviewer@example.test
+TURNSTILE_SITE_KEY=1x00000000000000000000AA
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+RATE_LIMIT_SALT=local-only-fixture-not-a-secret-12345
+PRIVACY_VERIFY_SECRET=local-only-fixture-not-a-secret-23456
+INTAKE_ENABLED=true
+INTAKE_PRIVACY_POLICY_URL=https://example.test/fictional-policy
+INTAKE_STAGING_MAILBOX=sink@example.test
+WAITLIST_RETENTION_DAYS=2
+PRIVACY_RETENTION_DAYS=2
+DEMO_RETENTION_DAYS=2
+ACCESS_AUD=support-fixture
+INTAKE_ACCESS_AUD=sales-fixture
+PRIVACY_ACCESS_AUD=privacy-fixture
+INTAKE_STAFF_EMAILS=sales-fixture@example.test
+PRIVACY_STAFF_EMAILS=privacy-fixture@example.test

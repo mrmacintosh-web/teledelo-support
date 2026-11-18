@@ -7,7 +7,7 @@ const screenshots = process.env.TD_SCREENSHOTS || './screenshots';
 const files = new Map([['/help/','help'],['/waitlist?plan=pro','waitlist'],['/demo','demo'],['/privacy-request','privacy'],['/calculator?plan=pro','calculator']]);
 async function run(){
  fs.mkdirSync(screenshots,{recursive:true});
- const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH || '/usr/bin/chromium',args:['--no-sandbox']});
+ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH || '/usr/bin/chromium',args:['--no-sandbox', ...(process.env.TD_CERT_SPKI ? ['--ignore-certificate-errors-spki-list='+process.env.TD_CERT_SPKI] : [])]});
  const context=await browser.newContext({viewport:{width:1440,height:1000}, reducedMotion:'reduce'});
  const page=await context.newPage();
  const errors=[];
@@ -63,17 +63,22 @@ async function run(){
  assert.equal(await page.locator('#calls').inputValue(),'8');
  assert.equal(await page.locator('#plan-lite').isChecked(),true);
  await page.goto(base+'/privacy-request');
- const button=page.locator('button[type=submit]');
- await button.click();
- assert.equal(await page.locator('#name').evaluate(e=>e.validity.valueMissing),true);
- await page.locator('#name').fill('Fictional Reviewer');
- await page.locator('#email').fill('reviewer@example.test');
- await page.locator('#request_type').selectOption('other');
- await button.click();
- await page.getByText('The security check is temporarily unavailable. Please try again.').waitFor();
- assert.equal(await page.locator('#form-result').isVisible(),false);
+ if (process.env.TD_STAGING_READONLY === '1') {
+  await page.getByText('This form is temporarily unavailable.',{exact:true}).waitFor();
+  assert.equal(await page.locator('button[type=submit]').isDisabled(),true);
+ } else {
+  const button=page.locator('button[type=submit]');
+  await button.click();
+  assert.equal(await page.locator('#name').evaluate(e=>e.validity.valueMissing),true);
+  await page.locator('#name').fill('Fictional Reviewer');
+  await page.locator('#email').fill('reviewer@example.test');
+  await page.locator('#request_type').selectOption('other');
+  await button.click();
+  await page.getByText('The security check is temporarily unavailable. Please try again.').waitFor();
+  assert.equal(await page.locator('#form-result').isVisible(),false);
+ }
  assert.deepEqual(errors,[]);
- console.log('PASS: 30 route/viewport combinations, 8 WCAG scans, calculator math and reset, 3 calculator-to-waitlist links, form validation and API error');
+ console.log('PASS: 30 route/viewport combinations, 8 WCAG scans, calculator math and reset, 3 calculator-to-waitlist links, ' + (process.env.TD_STAGING_READONLY === '1' ? 'staging intake fail-closed state' : 'form validation and API error'));
  await browser.close();
 }
 run().catch(err=>{console.error(err);process.exit(1)});

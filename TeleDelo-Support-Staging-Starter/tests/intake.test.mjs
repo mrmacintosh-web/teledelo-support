@@ -200,7 +200,11 @@ test('the shared Worker stores, deduplicates and notifies all three intakes on l
 
   await t.test('gateway signs the effective public origin and IP, preserves query and only routes public support paths', async () => {
     activeAction = 'waitlist';
-    const gateway = createSupportGateway(env, (url, options) => worker.fetch(new Request(url, options), env, context));
+    const gateway = createSupportGateway(env, (url, options) => {
+      if (url.pathname.startsWith('/help/') && !url.pathname.startsWith('/help/api/')) assert.ok(url.pathname.endsWith('/'));
+      else assert.notEqual(url.pathname, '/help');
+      return worker.fetch(new Request(url, options), env, context);
+    });
     const createRequest = (path, init) => new Request(publicOrigin + path, init);
     assert.equal((await gateway(createRequest('/dashboard'))).status, 404);
     assert.equal((await gateway(createRequest('/api/support-edge?td_path=/help/admin/intake/privacy/api'))).status, 404);
@@ -213,6 +217,8 @@ test('the shared Worker stores, deduplicates and notifies all three intakes on l
       method: 'POST', headers: { origin: direct }, body: '{}',
     }))).status, 403);
     assert.equal((await gateway(createRequest('/waitlist?plan=pro'))).headers.get('cache-control'), 'no-store');
+    assert.equal((await gateway(createRequest('/help'))).status, 200);
+    assert.equal((await gateway(createRequest('/api/support-edge?td_path=/help/requests&auth=fixture'))).status, 200);
     assert.equal((await get('/waitlist', { 'X-TD-Support-Signature': 'untrusted' })).status, 403);
   });
 });

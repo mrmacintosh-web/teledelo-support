@@ -73,7 +73,10 @@ export function createSupportGateway(env = process.env, transport = fetch) {
     if (body === null) return problem(413, 'Request too large or invalid.');
 
     url.searchParams.delete('td_path');
-    const target = new URL(path + url.search, upstream);
+    // Cloudflare's directory assets are served on the slash form. Vercel can
+    // keep the clean URL without redirecting back and forth between platforms.
+    const workerPath = /^\/help(?:\/requests)?\/?$/.test(path) ? path.replace(/\/$/, '') + '/' : path;
+    const target = new URL(workerPath + url.search, upstream);
     const time = String(Math.floor(Date.now() / 1000));
     const forwarded = request.headers.get('x-vercel-forwarded-for') || '';
     const ip = isIP(forwarded) ? forwarded : '';

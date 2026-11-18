@@ -65,3 +65,21 @@ On staging use a private config copied from the existing staging deployment, wit
 Use the [Vercel gateway guide](vercel-integration/README.md) for the fixed preview alias. To test real email, send one fictional request of each kind with approved test email addresses and use a reviewer with access to each approved recipient inbox. First use the staging sink and then coordinate the short departmental acceptance-test window. Confirm each applicant receipt, the departmental subject and payload, D1 row and outbox status, and the absence of duplicate mail. Keep receipt provider acceptance and actual mailbox receipt separate in evidence.
 
 For rollback disable `INTAKE_ENABLED` and return the existing staging Worker to its verified prior version. The additive tables can stay in place. Revert the Vercel deployment independently and coordinate any outstanding staging intake notifications before rolling back to code that lacks their templates.
+
+## Verification and staging handoff
+
+| Check | Result |
+|---|---|
+| Node test suite | 46 passed, including the prior 38 support, security, and AI staging tests. |
+| D1 | All three migrations applied in Wrangler locally. The new migration also applied to the existing staging DB. The three new tables and original tickets table were confirmed from staging schema metadata. |
+| Local intake flow | Real local D1 with mocked Turnstile, Access certificates, and Email Sending. Verified departmental content and recipients, applicant receipts, duplicate requests, provider outage and recovery, rate limits, privacy authorization and verification, and closed-case retention. |
+| Browser | Chromium checked all five pages at 320, 375, 390, 768, 1024, and 1440 px locally and on staging. Eight WCAG-tagged axe scans passed per environment on the four marketing pages at desktop and mobile widths. Tested calculator computations, overage, invalid input, reset, and plan-specific waitlist links. |
+| Staging | The public pages and required tested assets returned HTTP 200. Existing support health/config was ready and an invalid support submission returned HTTP 400. Anonymous staff access went to Cloudflare Access. New intake POSTs returned HTTP 503 because collection is paused. |
+| Vercel | The signed gateway was tested locally against the Worker, including same-origin POSTs, path allowlisting, and the slash handling for Help Center assets. No TeleDelo project was visible in the authorized Vercel account, so no Vercel preview or custom-domain route was deployed. |
+| Live collection and delivery | Pending. The staging Worker kept the real Email Sending binding and the existing support destination. New form delivery was simulated locally. No new test mail was sent or received in real inboxes during this run. |
+
+[Desktop and mobile contact sheet](review/contact-sheet.jpg). The Dropbox ZIP includes the full screenshots from the local Worker and the deployed staging Worker. The local contact sheet uses fictional settings and a stubbed Turnstile widget.
+
+Staging review URL: [Existing TeleDelo Help Center staging Worker](https://teledelo-support-staging.yashsunderraj.workers.dev/help/). Public paths also include `/waitlist?plan=pro`, `/demo`, `/privacy-request`, and `/calculator`. Active staging version is `cdb5ad17-82d0-4e66-ac08-0c990174f0b2`. Its immediate rollback target is `8ff9f20f-d496-4ad3-887a-8b6d1200d723`. The active scheduled trigger remained `*/5 * * * *`.
+
+Before enabling staging intake collection, set the approved policy URL, retention, and separate Cloudflare Access audiences and reviewer lists. Configure the approved staging sink and any authorized founder addresses. Then run the fictional submission and inbox acceptance tests. Before production cutover, apply the routing on the correct Vercel project, enroll its hostname in the approved Turnstile widget, verify the matching gateway secret and routing, and obtain production release approval. Production Worker, DNS, and customer records were outside the staging change.
