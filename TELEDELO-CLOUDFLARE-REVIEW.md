@@ -70,7 +70,7 @@ For rollback disable `INTAKE_ENABLED` and return the existing staging Worker to 
 
 | Check | Result |
 |---|---|
-| Node test suite | 46 passed, including the prior 38 support, security, and AI staging tests. |
+| Node test suite | 47 passed, including the prior 38 support, security, and AI staging tests. |
 | D1 | All three migrations applied in Wrangler locally. The new migration also applied to the existing staging DB. The three new tables and original tickets table were confirmed from staging schema metadata. |
 | Local intake flow | Real local D1 with mocked Turnstile, Access certificates, and Email Sending. Verified departmental content and recipients, applicant receipts, duplicate requests, provider outage and recovery, rate limits, privacy authorization and verification, and closed-case retention. |
 | Browser | Chromium checked all five pages at 320, 375, 390, 768, 1024, and 1440 px locally and on staging. Eight WCAG-tagged axe scans passed per environment on the four marketing pages at desktop and mobile widths. Tested calculator computations, overage, invalid input, reset, and plan-specific waitlist links. |
@@ -80,6 +80,6 @@ For rollback disable `INTAKE_ENABLED` and return the existing staging Worker to 
 
 [Desktop and mobile contact sheet](review/contact-sheet.jpg). The Dropbox ZIP includes the full screenshots from the local Worker and the deployed staging Worker. The local contact sheet uses fictional settings and a stubbed Turnstile widget.
 
-Staging review URL: [Existing TeleDelo Help Center staging Worker](https://teledelo-support-staging.yashsunderraj.workers.dev/help/). Public paths also include `/waitlist?plan=pro`, `/demo`, `/privacy-request`, and `/calculator`. Active staging version is `cdb5ad17-82d0-4e66-ac08-0c990174f0b2`. Its immediate rollback target is `8ff9f20f-d496-4ad3-887a-8b6d1200d723`. The active scheduled trigger remained `*/5 * * * *`.
+The [staging root](https://teledelo-support-staging.yashsunderraj.workers.dev/) redirects to the Help Center at `/help/`. The redirect and public routes were verified on staging. Public paths also include `/waitlist?plan=pro`, `/demo`, `/privacy-request`, and `/calculator`. Active staging version is `2c621bed-a4d0-4213-bbf1-50528d53d651`. To roll back the root redirect, deploy `cdb5ad17-82d0-4e66-ac08-0c990174f0b2`. The version before the intake integration was `8ff9f20f-d496-4ad3-887a-8b6d1200d723`. The active scheduled trigger remained `*/5 * * * *`.
 
 Before enabling staging intake collection, set the approved policy URL, retention, and separate Cloudflare Access audiences and reviewer lists. Configure the approved staging sink and any authorized founder addresses. Then run the fictional submission and inbox acceptance tests. Before production cutover, apply the routing on the correct Vercel project, enroll its hostname in the approved Turnstile widget, verify the matching gateway secret and routing, and obtain production release approval. Production Worker, DNS, and customer records were outside the staging change.
